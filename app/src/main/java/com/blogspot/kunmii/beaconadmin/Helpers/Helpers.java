@@ -1,4 +1,4 @@
-package com.blogspot.kunmii.beaconadmin;
+package com.blogspot.kunmii.beaconadmin.Helpers;
 
 import android.app.Application;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+
+import com.blogspot.kunmii.beaconadmin.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +53,6 @@ public class Helpers {
             pref.putString(Config.USERNAME, username);
             pref.putString(Config.USER_EMAIL, email);
             pref.putBoolean(Config.IS_ADMIN, isadmin);
-
 
             pref.apply();
             return true;

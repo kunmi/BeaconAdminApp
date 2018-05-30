@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.blogspot.kunmii.beaconadmin.Config;
-import com.blogspot.kunmii.beaconadmin.Helpers;
+import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.R;
 
 import org.json.JSONException;
