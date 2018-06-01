@@ -20,7 +20,7 @@ public interface ProjectDAO {
     LiveData<List<Project>> getAll();
 
     @Query("SELECT * FROM projects WHERE objectid = :proId")
-    Project getProjectById(String proId);
+    LiveData<Project> getProjectById(String proId);
 
     @Insert
     void insertAll(Project... projects);

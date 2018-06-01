@@ -14,10 +14,11 @@ public interface BeaconDAO {
 
 
     @Query("SELECT * FROM beacon WHERE projectid = :projectId AND floorplanid = :floorplanId")
-    LiveData<List<Beacon>> getBeaconFromProjectWithProjectId(String projectId, String floorplanId);
+    List<Beacon> getBeaconFromProjectWithProjectId(String projectId, String floorplanId);
 
     @Query("UPDATE beacon SET beacon = :beaconData, type = :type WHERE projectid = :projectId AND floorplanid = :floorplanId")
     int UpdateBeacon(String projectId, String floorplanId, String type,String beaconData);
+
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

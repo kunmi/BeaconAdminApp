@@ -1,5 +1,6 @@
 package com.blogspot.kunmii.beaconadmin.adapters;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.blogspot.kunmii.beaconadmin.R;
+import com.blogspot.kunmii.beaconadmin.activities.MainActivity;
 import com.blogspot.kunmii.beaconadmin.data.Project;
 
 import java.util.List;
@@ -15,8 +17,10 @@ import java.util.List;
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.RecyclerViewHolder>{
 
     List<Project> projects;
-    public ProjectAdapter(List<Project> data){
+    MainActivity.ProjectClickListener clickListener;
+    public ProjectAdapter(List<Project> data, MainActivity.ProjectClickListener listener){
         projects = data;
+        clickListener = listener;
     }
 
     @NonNull
@@ -33,14 +37,12 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.Recycler
         holder.titleTextView.setText(project.getName());
         holder.bodyTextView.setText(project.getDescription());
         holder.createdTextView.setText(project.getUpdated());
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int id = projects.get(position).getId();
+                clickListener.onClick(project);
             }
         });
-
 
     }
 

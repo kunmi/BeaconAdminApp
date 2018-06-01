@@ -47,7 +47,14 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setSubtitle("Projects");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerViewAdapter = new ProjectAdapter(new ArrayList<Project>());
+        recyclerViewAdapter = new ProjectAdapter(new ArrayList<Project>(), new ProjectClickListener() {
+            @Override
+            public void onClick(Project project) {
+                Intent i = new Intent(MainActivity.this, FloorPlanListActivity.class);
+                i.putExtra(FloorPlanListActivity.PROJECT_ID_KEY, project.getObjectId());
+                startActivity(i);
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -70,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
                 viewModel.getAllAsignedProjects().observe(MainActivity.this, new Observer<List<Project>>() {
                     @Override
-                    public void onChanged(@Nullable List<Project> itemAndPeople) {
-                        recyclerViewAdapter.addItems(itemAndPeople);
+                    public void onChanged(@Nullable List<Project> projects) {
+                        recyclerViewAdapter.addItems(projects);
                     }
                 });
             }
@@ -86,5 +93,9 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public interface ProjectClickListener{
+        public void onClick(Project project);
     }
 }

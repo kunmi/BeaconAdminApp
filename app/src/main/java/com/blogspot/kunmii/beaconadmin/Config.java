@@ -1,7 +1,8 @@
 package com.blogspot.kunmii.beaconadmin;
 
 public class Config {
-    public static final String SERVER_URL = "http://10.0.2.2:3000/api/";
+    public static final String SERVER = "http://10.0.2.2:3000/";
+    public static final String SERVER_URL = SERVER+"api/";
     static final String LOGIN_URL = "authenticate";
     static final String GET_PROJECT_URL = "projects";
 
@@ -20,6 +21,10 @@ public class Config {
 
     public static String getGetProjectUrl() {
         return GET_PROJECT_URL;
+    }
+
+    public static String generateImageUrl(String path){
+        return SERVER + path;
     }
 
 

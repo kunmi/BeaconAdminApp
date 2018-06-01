@@ -3,6 +3,7 @@ package com.blogspot.kunmii.beaconadmin.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
@@ -19,9 +20,11 @@ public class Beacon {
     @ColumnInfo(name  = "objectid")
     String objectId;
 
+    @ForeignKey(entity = FloorPlan.class, parentColumns = "objectid", childColumns = "floorplanid")
     @ColumnInfo(name  = "floorplanid")
     String floorPlanId;
 
+    @ForeignKey(entity = Project.class, parentColumns = "objectid", childColumns = "projectid")
     @ColumnInfo(name = "projectid")
     String projectId;
 

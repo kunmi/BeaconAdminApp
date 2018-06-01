@@ -6,6 +6,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
+import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
+import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
 import com.blogspot.kunmii.beaconadmin.data.Project;
 
 import java.util.List;
@@ -26,5 +28,14 @@ public class ApplicationViewModel extends AndroidViewModel{
 
     public LiveData<List<Project>> getAllAsignedProjects() {
         return projects;
+    }
+
+    public LiveData<List<FloorplanWithBeacons>> getFloorplanForProject(String projectId) {
+        return repository.getFloorplanForProject(projectId);
+    }
+
+    public LiveData<Project> getProject(String id)
+    {
+        return repository.projecDao.getProjectById(id);
     }
 }

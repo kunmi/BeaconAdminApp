@@ -2,14 +2,13 @@ package com.blogspot.kunmii.beaconadmin;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
 
 import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.data.BeaconDAO;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
 import com.blogspot.kunmii.beaconadmin.data.FloorplanDAO;
+import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
 import com.blogspot.kunmii.beaconadmin.data.Project;
 import com.blogspot.kunmii.beaconadmin.data.ProjectDAO;
 import com.blogspot.kunmii.beaconadmin.network.IServerRequestListener;
@@ -20,10 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AppRepository {
@@ -47,13 +42,15 @@ public class AppRepository {
         beaconDAO = db.beaconDAO();
 
         projects = projecDao.getAll();
-
-
     }
 
     public LiveData<List<Project>> getAssignedProjects(){
         checkForUpdates();
         return projects;
+    }
+
+    public LiveData<List<FloorplanWithBeacons>> getFloorplanForProject(String objectId) {
+        return floorplanDao.loadFloorPlansWithBeaconsForProjects(objectId);
     }
 
     public void checkForUpdates(){

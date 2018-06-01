@@ -22,6 +22,9 @@
         <activity android:name=".activities.LoginActivity"
             android:theme="@style/Theme.Design.NoActionBar"/>
 
+        <activity android:name=".activities.FloorPlanListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
 
     </application>
 

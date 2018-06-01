@@ -2,12 +2,15 @@ package com.blogspot.kunmii.beaconadmin.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
+import com.blogspot.kunmii.beaconadmin.AppDatabase;
 import com.blogspot.kunmii.beaconadmin.Helpers.DateConverter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity(tableName = "floorplan")
 public class FloorPlan {
@@ -18,6 +21,7 @@ public class FloorPlan {
     @ColumnInfo(name  = "objectid")
     String objectId;
 
+    @ForeignKey(entity = Project.class, parentColumns = "objectid", childColumns = "projectid")
     @ColumnInfo(name  = "projectid")
     String projectObjectId;
 
@@ -78,4 +82,5 @@ public class FloorPlan {
     public void setUpdated(String updated) {
         this.updated = updated;
     }
+
 }
