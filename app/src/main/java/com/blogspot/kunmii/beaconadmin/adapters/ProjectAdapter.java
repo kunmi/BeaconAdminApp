@@ -32,6 +32,16 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.Recycler
 
         holder.titleTextView.setText(project.getName());
         holder.bodyTextView.setText(project.getDescription());
+        holder.createdTextView.setText(project.getUpdated());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = projects.get(position).getId();
+            }
+        });
+
+
     }
 
     @Override
@@ -45,13 +55,17 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.Recycler
     }
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder {
+        private View itemView;
         private TextView titleTextView;
         private TextView bodyTextView;
+        private TextView createdTextView;
 
         RecyclerViewHolder(View view) {
             super(view);
+            itemView = view;
             titleTextView = (TextView) view.findViewById(R.id.title_view);
             bodyTextView = (TextView) view.findViewById(R.id.body_view);
+            createdTextView = view.findViewById(R.id.created_view);
         }
     }
 }

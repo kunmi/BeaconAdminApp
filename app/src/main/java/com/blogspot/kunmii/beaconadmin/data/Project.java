@@ -27,9 +27,8 @@ public class Project {
     @ColumnInfo(name = "description")
     private String description;
 
-    @TypeConverters(DateConverter.class)
     @ColumnInfo(name = "updated")
-    Date updated;
+    String updated;
 
     public int getId() {
         return id;
@@ -71,11 +70,11 @@ public class Project {
         this.email = email;
     }
 
-    public Date getUpdated() {
+    public String getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Date updated) {
+    public void setUpdated(String updated) {
         this.updated = updated;
     }
 }

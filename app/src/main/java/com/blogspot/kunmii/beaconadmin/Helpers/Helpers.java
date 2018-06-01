@@ -6,9 +6,11 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.constraint.solver.widgets.Helper;
 import android.support.v7.app.AlertDialog;
 
 import com.blogspot.kunmii.beaconadmin.Config;
+import com.blogspot.kunmii.beaconadmin.network.ServerRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,7 +64,16 @@ public class Helpers {
             e.printStackTrace();
             return false;
         }
+    }
 
+
+    public static ServerRequest craftProjectRetrieveRequest(Application application)
+    {
+        String token = Helpers.getUserToken(application);
+        ServerRequest request = new ServerRequest(application, Config.getGetProjectUrl());
+        request.putHeader("Authorization", token);
+        request.putHeader("Content-Type", "application/json");
+        return request;
     }
 
 

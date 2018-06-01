@@ -1,12 +1,14 @@
 package com.blogspot.kunmii.beaconadmin.network;
 
 import android.app.Application;
+import android.os.HandlerThread;
 
 import com.blogspot.kunmii.beaconadmin.Config;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.logging.Handler;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -40,7 +42,7 @@ public class ServerRequest {
         headers.put(header, value);
     }
 
-    public void execute(){
+    public void execute(IServerRequestListener listener){
         Request.Builder request = new Request.Builder()
                 .url(path);
 
@@ -49,19 +51,24 @@ public class ServerRequest {
             request.header(key, headers.get(key));
         }
 
-        request.post(body);
+        if(body != null)
+            request.post(body);
+        else
+            request.get();
 
-        try {
-            Response response = client.newCall(request.build()).execute();
-            String val = response.body().string();
+            new Thread(() -> {
+                try {
+                Response response = client.newCall(request.build()).execute();
+                listener.onResponse(new ServerResponse(response));
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
+            }).start();
 
 
 
-        }
-        catch (Exception exp)
-        {
-            exp.printStackTrace();
-        }
     }
 
 

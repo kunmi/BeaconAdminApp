@@ -28,12 +28,20 @@ public class Beacon {
     @ColumnInfo(name = "type")
     String type;
 
+    @ColumnInfo(name = "map")
+    String map;
+
+    @ColumnInfo(name = "ref")
+    String ref;
+
+    @ColumnInfo(name = "txpower")
+    String txpower;
+
     @ColumnInfo(name  = "beacon")
     String beaconData;
 
-    @TypeConverters(DateConverter.class)
-    @ColumnInfo(name  = "updated")
-    Date updated;
+    @ColumnInfo(name = "updated")
+    String updated;
 
     public int getId() {
         return id;
@@ -59,12 +67,44 @@ public class Beacon {
         this.floorPlanId = floorPlanId;
     }
 
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public String getType() {
         return type;
     }
 
+    public String getMap() {
+        return map;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
+    }
+
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    public String getTxpower() {
+        return txpower;
+    }
+
+    public void setTxpower(String txpower) {
+        this.txpower = txpower;
     }
 
     public String getBeaconData() {
@@ -73,5 +113,13 @@ public class Beacon {
 
     public void setBeaconData(String beaconData) {
         this.beaconData = beaconData;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
     }
 }

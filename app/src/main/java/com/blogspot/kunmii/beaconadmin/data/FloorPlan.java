@@ -27,11 +27,55 @@ public class FloorPlan {
     @ColumnInfo(name  = "url")
     String fileurl;
 
-    @TypeConverters(DateConverter.class)
-    @ColumnInfo(name  = "updated")
-    Date updated;
+    @ColumnInfo(name = "updated")
+    String updated;
 
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getProjectObjectId() {
+        return projectObjectId;
+    }
+
+    public void setProjectObjectId(String projectObjectId) {
+        this.projectObjectId = projectObjectId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFileurl() {
+        return fileurl;
+    }
+
+    public void setFileurl(String fileurl) {
+        this.fileurl = fileurl;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
 }

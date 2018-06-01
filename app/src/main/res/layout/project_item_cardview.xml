@@ -32,7 +32,35 @@
             android:fontFamily="sans-serif"
             android:textSize="16sp"
             android:text="body"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="Last Updated: "/>
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:id="@+id/created_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
+        android:text="xxxx"/>
+
+
+</LinearLayout>
+
 
     </LinearLayout>
 

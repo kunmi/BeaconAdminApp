@@ -1,8 +1,9 @@
 package com.blogspot.kunmii.beaconadmin;
 
 public class Config {
-    public static final String SERVER_URL = "http://10.0.2.2:3000/";
-    public static final String LOGIN_URL = "api/authenticate";
+    public static final String SERVER_URL = "http://10.0.2.2:3000/api/";
+    static final String LOGIN_URL = "authenticate";
+    static final String GET_PROJECT_URL = "projects";
 
     public static final String USER_TOKEN = "user_token";
 
@@ -13,6 +14,35 @@ public class Config {
     public static final String IS_ADMIN = "is_admin";
 
 
+    public static String getLoginUrl() {
+        return LOGIN_URL;
+    }
 
+    public static String getGetProjectUrl() {
+        return GET_PROJECT_URL;
+    }
+
+
+    public interface NETWORK_JSON_NODE{
+        public static final String OBJECT_ID = "_id";
+        public static final String UPDATED = "updated";
+        public static final String CREATED = "created";
+
+        public static final String PROJECT_NAME = "name";
+        public static final String PROJECT_EMAIL = "email";
+        public static final String PROJECT_DESCRIPTION = "description";
+        public static final String PROJECT_FLOORPLANS = "floorPlans";
+
+        public static final String FLOORPLAN_NAME = "name";
+        public static final String FLOORPLAN_URL = "url";
+        public static final String FLOORPLAN_BEACONS = "beacons";
+
+        public static final String BEACON_TYPE = "type";
+        public static final String BEACON_REF = "ref";
+        public static final String BEACON_TXPOWER = "txPower";
+        public static final String BEACON_MAP = "map";
+
+
+    }
 
 }
