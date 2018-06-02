@@ -12,6 +12,7 @@ public class FloorplanWithBeacons {
     @Relation(parentColumn = "objectid", entityColumn = "floorplanid", entity = Beacon.class)
     List<Beacon> beacons;
 
+
     public FloorPlan getFloorPlan() {
         return floorPlan;
     }

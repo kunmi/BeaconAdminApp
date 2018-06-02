@@ -2,6 +2,7 @@ package com.blogspot.kunmii.beaconadmin.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -49,7 +50,6 @@ public class FloorPlanListActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setSubtitle("Projects");
 
         projectId = getIntent().getStringExtra(PROJECT_ID_KEY);
 
@@ -57,7 +57,12 @@ public class FloorPlanListActivity extends AppCompatActivity
         recyclerViewAdapter = new FloorplanAdapter(new ArrayList<FloorplanWithBeacons>(), new FloorplanClickListener() {
             @Override
             public void onClick(FloorPlan plan) {
+                Intent i = new Intent(FloorPlanListActivity.this, FloorplanActivity.class);
 
+                i.putExtra(FloorplanActivity.FLOORPLAN_ID, plan.getObjectId());
+                i.putExtra(FloorplanActivity.PROJECT_ID, projectId);
+
+                startActivity(i);
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -94,7 +99,6 @@ public class FloorPlanListActivity extends AppCompatActivity
             case android.R.id.home:
                 finish();
         }
-
 
         return super.onOptionsItemSelected(item);
     }

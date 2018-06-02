@@ -22,6 +22,10 @@ public interface FloorplanDAO {
     @Query("SELECT * FROM floorplan WHERE projectid = :projectId")
     public LiveData<List<FloorplanWithBeacons>> loadFloorPlansWithBeaconsForProjects(String projectId);
 
+    @Transaction
+    @Query("SELECT * FROM floorplan  WHERE objectid = :floorplanId LIMIT 1")
+    public  LiveData<FloorplanWithBeacons> getFloorplansBeacons(String floorplanId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(FloorPlan floorPlan);
 

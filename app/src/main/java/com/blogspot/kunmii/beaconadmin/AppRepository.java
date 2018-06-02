@@ -53,6 +53,17 @@ public class AppRepository {
         return floorplanDao.loadFloorPlansWithBeaconsForProjects(objectId);
     }
 
+    public LiveData<List<Project>> getProjects() {
+        return projects;
+    }
+
+    public LiveData<FloorplanWithBeacons> getFLoorplanWithId(String objectId)
+    {
+        return floorplanDao.getFloorplansBeacons(objectId);
+
+    }
+
+
     public void checkForUpdates(){
         new Thread(new Runnable() {
             @Override
@@ -120,7 +131,12 @@ public class AppRepository {
                                             beacon.setFloorPlanId(floorPlan.getObjectId());
                                             beacon.setProjectId(project.getObjectId());
                                             beacon.setObjectId(beaconJson.getString(Config.NETWORK_JSON_NODE.OBJECT_ID));
-                                            beacon.setMap(beaconJson.getJSONObject(Config.NETWORK_JSON_NODE.BEACON_MAP).toString());
+
+                                            JSONObject mapJson = beaconJson.getJSONObject(Config.NETWORK_JSON_NODE.BEACON_MAP);
+
+                                            beacon.setX(mapJson.getDouble(Config.NETWORK_JSON_NODE.BEACON_MAP_X));
+                                            beacon.setY(mapJson.getDouble(Config.NETWORK_JSON_NODE.BEACON__MAP_Y));
+
                                             beacon.setType(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_TYPE));
 
                                             beacon.setRef(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_REF));

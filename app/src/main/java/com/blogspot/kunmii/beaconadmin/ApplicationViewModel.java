@@ -38,4 +38,15 @@ public class ApplicationViewModel extends AndroidViewModel{
     {
         return repository.projecDao.getProjectById(id);
     }
+
+    public LiveData<FloorplanWithBeacons> getFloorplanWithId(String id) {
+        return repository.getFLoorplanWithId(id);
+    }
+
+    public LiveData<List<String>> getBeaconsNearMe() {
+
+
+
+        return null;
+    }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e365ec400ae7d35182a9d6bfbc22df4f",
+    "identityHash": "07d7e2da2167cfd0195ddbef9a845257",
     "entities": [
       {
         "tableName": "projects",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "beacon",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `objectid` TEXT, `floorplanid` TEXT, `projectid` TEXT, `type` TEXT, `map` TEXT, `ref` TEXT, `txpower` TEXT, `beacon` TEXT, `updated` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `objectid` TEXT, `floorplanid` TEXT, `projectid` TEXT, `type` TEXT, `x` REAL NOT NULL, `y` REAL NOT NULL, `ref` TEXT, `txpower` TEXT, `beacon` TEXT, `updated` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -89,10 +89,16 @@
             "notNull": false
           },
           {
-            "fieldPath": "map",
-            "columnName": "map",
-            "affinity": "TEXT",
-            "notNull": false
+            "fieldPath": "x",
+            "columnName": "x",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "y",
+            "columnName": "y",
+            "affinity": "REAL",
+            "notNull": true
           },
           {
             "fieldPath": "ref",
@@ -181,7 +187,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e365ec400ae7d35182a9d6bfbc22df4f\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"07d7e2da2167cfd0195ddbef9a845257\")"
     ]
   }
 }

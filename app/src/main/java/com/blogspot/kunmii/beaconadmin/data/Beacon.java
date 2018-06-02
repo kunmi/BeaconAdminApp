@@ -5,11 +5,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
-
-import com.blogspot.kunmii.beaconadmin.Helpers.DateConverter;
-
-import java.util.Date;
+import android.graphics.PointF;
 
 @Entity(tableName = "beacon")
 public class Beacon {
@@ -31,8 +27,11 @@ public class Beacon {
     @ColumnInfo(name = "type")
     String type;
 
-    @ColumnInfo(name = "map")
-    String map;
+    @ColumnInfo(name = "x")
+    double x;
+
+    @ColumnInfo(name = "y")
+    double y;
 
     @ColumnInfo(name = "ref")
     String ref;
@@ -82,12 +81,21 @@ public class Beacon {
         return type;
     }
 
-    public String getMap() {
-        return map;
+
+    public void setX(double x) {
+        this.x = x;
     }
 
-    public void setMap(String map) {
-        this.map = map;
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
     }
 
     public void setType(String type) {
@@ -124,5 +132,17 @@ public class Beacon {
 
     public void setUpdated(String updated) {
         this.updated = updated;
+    }
+
+    public boolean isIbeacon(){
+        if(type.equals("iBeacon"))
+            return true;
+        else
+            return false;
+    }
+
+    //Image is stored as percentage relative to the image size.
+    public PointF getCoordsAsPixel(int width, int height){
+        return new PointF((float) (x/100)*width, (float) (y/100) * height);
     }
 }

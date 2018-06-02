@@ -1,10 +1,19 @@
 package com.blogspot.kunmii.beaconadmin;
 
 public class Config {
-    public static final String SERVER = "http://10.0.2.2:3000/";
+
+
+    public static float ICON_HEIGHT = 50;
+    public static float ICON_WIDTH = 50;
+
+
+    public static final String SERVER = "http://192.168.0.100:3000/";
+
+//    public static final String SERVER = "http://10.0.2.2:3000/";
     public static final String SERVER_URL = SERVER+"api/";
     static final String LOGIN_URL = "authenticate";
     static final String GET_PROJECT_URL = "projects";
+
 
     public static final String USER_TOKEN = "user_token";
 
@@ -13,6 +22,7 @@ public class Config {
     public static final String USERNAME = "username";
     public static final String USER_EMAIL = "user_email";
     public static final String IS_ADMIN = "is_admin";
+
 
 
     public static String getLoginUrl() {
@@ -46,6 +56,8 @@ public class Config {
         public static final String BEACON_REF = "ref";
         public static final String BEACON_TXPOWER = "txPower";
         public static final String BEACON_MAP = "map";
+        public static final String BEACON_MAP_X = "x";
+        public static final String BEACON__MAP_Y = "y";
 
 
     }
