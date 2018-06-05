@@ -3,17 +3,14 @@
     "x": "",
     "y": ""
   },
-  "updated": "",
-  "type": "",
+  "frameType": "UID",
   "_id": "",
+  "updated": "",
+  "type": "eddystone",
+  "nameSpaceId": "",
+  "instanceId": "",
+  "telemetry":"",
   "ref": "",
   "txPower": "",
-
-  "frameType": "",
-
-  "nameSpaceId": "",
-  "instanceId":"",
-  "telemetry":"",
-
   "created": ""
 }

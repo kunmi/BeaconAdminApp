@@ -4,12 +4,12 @@
     "y": ""
   },
   "updated": "",
-  "type": "",
+  "type": "iBeacon",
   "_id": "",
   "uuid": "",
   "major": "",
   "minor": "",
-  "ref": null,
+  "ref": "",
   "txPower": "",
   "created": ""
 }

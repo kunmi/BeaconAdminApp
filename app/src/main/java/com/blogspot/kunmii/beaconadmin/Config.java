@@ -39,25 +39,37 @@ public class Config {
 
 
     public interface NETWORK_JSON_NODE{
-        public static final String OBJECT_ID = "_id";
-        public static final String UPDATED = "updated";
-        public static final String CREATED = "created";
+           String OBJECT_ID = "_id";
+           String UPDATED = "updated";
+           String CREATED = "created";
 
-        public static final String PROJECT_NAME = "name";
-        public static final String PROJECT_EMAIL = "email";
-        public static final String PROJECT_DESCRIPTION = "description";
-        public static final String PROJECT_FLOORPLANS = "floorPlans";
+        String PROJECT_NAME = "name";
+        String PROJECT_EMAIL = "email";
+        String PROJECT_DESCRIPTION = "description";
+        String PROJECT_FLOORPLANS = "floorPlans";
 
-        public static final String FLOORPLAN_NAME = "name";
-        public static final String FLOORPLAN_URL = "url";
-        public static final String FLOORPLAN_BEACONS = "beacons";
+        String FLOORPLAN_NAME = "name";
+        String FLOORPLAN_URL = "url";
+        String FLOORPLAN_BEACONS = "beacons";
 
-        public static final String BEACON_TYPE = "type";
-        public static final String BEACON_REF = "ref";
-        public static final String BEACON_TXPOWER = "txPower";
-        public static final String BEACON_MAP = "map";
-        public static final String BEACON_MAP_X = "x";
-        public static final String BEACON__MAP_Y = "y";
+        String BEACON_TYPE = "type";
+        String BEACON_REF = "ref";
+        String BEACON_TXPOWER = "txPower";
+        String BEACON_MAP = "map";
+        String BEACON_MAP_X = "x";
+        String BEACON__MAP_Y = "y";
+
+        String IBEACON_UUID = "uuid";
+        String IBEACON_MAJOR = "major";
+        String IBEACON_MINOR = "minor";
+
+
+        String EDDY_NAMESPACEID = "nameSpaceId";
+        String EDDY_INSTANCEID = "instanceId";
+        String EDDY_TELEMETRY = "telemetry";
+
+
+
 
 
     }

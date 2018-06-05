@@ -25,6 +25,7 @@ import com.blogspot.kunmii.beaconadmin.data.Project;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FloorplanActivity extends AppCompatActivity{
@@ -41,7 +42,9 @@ public class FloorplanActivity extends AppCompatActivity{
     private ApplicationViewModel viewModel;
 
     FloorPlan floorPlan = null;
+
     List<Beacon> beacons = null;
+    List<Beacon> newBeacons = new ArrayList<>();
 
     FloorImageView imageView;
 
@@ -140,5 +143,19 @@ public class FloorplanActivity extends AppCompatActivity{
         inflater.inflate(R.menu.floormenu, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == ActivityBeaconList.RC)
+        {
+
+        }
+
+
+
     }
 }

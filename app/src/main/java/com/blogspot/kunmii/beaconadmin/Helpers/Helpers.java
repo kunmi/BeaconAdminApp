@@ -15,6 +15,10 @@ import com.blogspot.kunmii.beaconadmin.network.ServerRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.prefs.Preferences;
 
 public class Helpers {
@@ -76,6 +80,63 @@ public class Helpers {
         return request;
     }
 
+    public static JSONObject createIBeaconJSON (Application application){
+        JSONObject jsonObject = null;
+
+        try {
+            StringBuilder buf=new StringBuilder();
+            InputStream json = application.getAssets().open("ibeacon.json");
+            BufferedReader in =
+                    new BufferedReader(new InputStreamReader(json, "UTF-8"));
+            String str;
+
+            while ((str = in.readLine()) != null) {
+                buf.append(str);
+            }
+            in.close();
+
+            jsonObject = new JSONObject(buf.toString());
+        }
+        catch (IOException exp)
+        {
+            exp.printStackTrace();
+        }
+        catch (JSONException exp)
+        {
+            exp.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    public static JSONObject createEddystoneJson (Application application){
+        JSONObject jsonObject = null;
+
+        try {
+            StringBuilder buf=new StringBuilder();
+            InputStream json = application.getAssets().open("eddystone.json");
+            BufferedReader in =
+                    new BufferedReader(new InputStreamReader(json, "UTF-8"));
+            String str;
+
+            while ((str = in.readLine()) != null) {
+                buf.append(str);
+            }
+            in.close();
+
+            jsonObject = new JSONObject(buf.toString());
+        }
+        catch (IOException exp)
+        {
+            exp.printStackTrace();
+        }
+        catch (JSONException exp)
+        {
+            exp.printStackTrace();
+        }
+
+        return jsonObject;
+    }
 
 
 }

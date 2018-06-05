@@ -2,12 +2,15 @@ package com.blogspot.kunmii.beaconadmin.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.solver.widgets.Helper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
+import com.blogspot.kunmii.beaconadmin.Config;
 import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
+import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.adapters.CustomAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.EddyListAdapter;
@@ -24,6 +29,7 @@ import com.blogspot.kunmii.beaconadmin.adapters.IBeaconAdapter;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
 import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -34,6 +40,7 @@ import java.util.List;
 public class ActivityBeaconList extends AppCompatActivity{
 
     public static final int RC = 123;
+    public static final String BEACON_JSON = "beaconjson";
 
     AppBarLayout layout;
     Toolbar toolbar;
@@ -66,15 +73,67 @@ public class ActivityBeaconList extends AppCompatActivity{
 
         iBeaconFragment = TabFragment.IBeaconFragment.getInstance(new IBeaconAdapter.IbeaconListClickListener() {
             @Override
-            public void onClick(BeaconHelper.IBeaconWrapper item) {
-                JSONObject
+            public void onClick(BeaconHelper.IBeaconWrapper beaconWrapper) {
+
+                Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Add Beacon",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                JSONObject iBeacon = Helpers.createIBeaconJSON(getApplication());
+
+                                if(iBeacon!=null)
+                                {
+                                    try {
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_UUID, beaconWrapper.device.getProximityUUID().toString());
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_MAJOR, beaconWrapper.device.getMajor());
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_MINOR, beaconWrapper.device.getMinor());
+
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
+
+                                        Intent i = new Intent();
+                                        i.putExtra(BEACON_JSON, iBeacon.toString());
+                                        setResult(RC, i);
+                                    }
+                                    catch (JSONException exp)
+                                    {
+                                        exp.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+
             }
         });
 
         eddyFragment = TabFragment.EddyFragment.getInstance(new EddyListAdapter.EddyListClickListener() {
             @Override
-            public void onClick(BeaconHelper.EddystoneWrapper item) {
+            public void onClick(BeaconHelper.EddystoneWrapper beaconWrapper) {
+                Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Add Beacon",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                JSONObject eddyBeacon = Helpers.createEddystoneJson(getApplication());
 
+                                if(eddyBeacon!=null)
+                                {
+                                    try {
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID, beaconWrapper.device.getNamespace());
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID, beaconWrapper.device.getInstanceId());
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, beaconWrapper.device.getTelemetry().toString());
+
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
+
+                                        Intent i = new Intent();
+                                        i.putExtra(BEACON_JSON, eddyBeacon.toString());
+                                        setResult(RC, i);
+                                    }
+                                    catch (JSONException exp)
+                                    {
+                                        exp.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
             }
         });
 
