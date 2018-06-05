@@ -2,6 +2,7 @@ package com.blogspot.kunmii.beaconadmin.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
 import com.blogspot.kunmii.beaconadmin.Config;
+import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.Helpers.FloorImageView;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.data.Beacon;
@@ -42,6 +44,7 @@ public class FloorplanActivity extends AppCompatActivity{
     List<Beacon> beacons = null;
 
     FloorImageView imageView;
+
 
 
     @Override
@@ -115,7 +118,17 @@ public class FloorplanActivity extends AppCompatActivity{
         {
             case android.R.id.home:
                 finish();
+                break;
+
+            case R.id.addbeacon:
+                // Create and show the dialog.
+                Intent i = new Intent(this, ActivityBeaconList.class);
+                startActivityForResult(i,ActivityBeaconList.RC);
+                break;
+
         }
+
+
 
         return super.onOptionsItemSelected(item);
     }

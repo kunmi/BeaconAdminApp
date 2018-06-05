@@ -9,7 +9,7 @@
     <com.blogspot.kunmii.beaconadmin.Helpers.FloorImageView
         android:id="@+id/floorplan_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        />
 
 </android.support.constraint.ConstraintLayout>

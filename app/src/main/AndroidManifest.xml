@@ -35,6 +35,17 @@
         <activity android:name=".activities.FloorplanActivity" />
 
 
+        <activity android:name=".activities.ActivityBeaconList" />
+
+        <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
+
+
+
+        <meta-data
+            android:name="kontakt.io.API_KEY"
+            android:value="none" />
+
+
     </application>
 
 </manifest>
