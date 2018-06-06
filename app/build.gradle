@@ -9,6 +9,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+        compileOptions{
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
     buildTypes {
         release {
@@ -18,11 +28,14 @@ android {
     }
     productFlavors {
     }
+
 }
 
 dependencies {
 
     def room_version = "1.1.0" // or, for latest rc, use "1.1.1-rc1"
+    def lifecycle_version = "1.1.1"
+
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
@@ -35,7 +48,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
 
-
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 
@@ -44,6 +56,18 @@ dependencies {
 
     // optional - Guava support for Room, including Optional and ListenableFuture
     implementation "android.arch.persistence.room:guava:$room_version"
+// ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    // alternately - if using Java8, use the following instead of compiler
+    implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
+    // optional - Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:$lifecycle_version"
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    compile 'org.altbeacon:android-beacon-library:2+'
+    compile 'com.kontaktio:sdk:3.3.2'
+
 
 
 }

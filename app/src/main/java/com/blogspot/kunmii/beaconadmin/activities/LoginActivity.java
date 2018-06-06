@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.blogspot.kunmii.beaconadmin.Config;
-import com.blogspot.kunmii.beaconadmin.Helpers;
+import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.R;
 
 import org.json.JSONException;
@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity{
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBody.toString());
 
                     Request request = new Request.Builder()
-                            .url(Config.SERVER_URL + Config.LOGIN_URL)
+                            .url(Config.SERVER_URL + Config.getLoginUrl())
                             .post(requestBody)
                             .build();
 

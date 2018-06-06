@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "5abec502183b322a30e70571",
+    "name": "Project X",
+    "email": "coolkunmi@gmail.com",
+    "description": "Project X",
+    "floorPlans": [
+      {
+        "_id": "5abec52d183b322a30e70573",
+        "name": "Reception Floor 2",
+        "url": "floorplans/plan-5abec502183b322a30e70571-1522451757283.jpg",
+        "beacons": [
+          {
+            "map": {
+              "x": "22.66768292682927",
+              "y": "41.518691588785046"
+            },
+            "updated": "2018-05-31T12:34:10.418Z",
+            "type": "iBeacon",
+            "_id": "5ac70421bdc790c6140bc76b",
+            "uuid": "1",
+            "major": "2",
+            "minor": "120",
+            "ref": null,
+            "txPower": "",
+            "created": "2018-04-06T05:22:41.960Z"
+          }
+        ],
+        "created": "2018-03-30T23:15:57.287Z",
+        "updated": "2018-05-31T12:34:10.421Z"
+      }
+    ]
+  }
+]

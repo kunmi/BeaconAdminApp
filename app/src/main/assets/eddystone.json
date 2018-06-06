@@ -1,0 +1,16 @@
+{
+  "map": {
+    "x": "",
+    "y": ""
+  },
+  "frameType": "UID",
+  "_id": "",
+  "updated": "",
+  "type": "eddystone",
+  "nameSpaceId": "",
+  "instanceId": "",
+  "telemetry":"",
+  "ref": "",
+  "txPower": "",
+  "created": ""
+}
