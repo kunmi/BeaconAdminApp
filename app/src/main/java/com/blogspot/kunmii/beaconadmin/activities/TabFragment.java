@@ -97,12 +97,7 @@ public class TabFragment {
             View v = inflater.inflate(R.layout.fragment_beacons, container,false);
 
             recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
-            adapter = new EddyListAdapter(new EddyListAdapter.EddyListClickListener() {
-                @Override
-                public void onClick(BeaconHelper.EddystoneWrapper item) {
-
-                }
-            }, new ArrayList<>());
+            adapter = new EddyListAdapter(listener, new ArrayList<>());
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

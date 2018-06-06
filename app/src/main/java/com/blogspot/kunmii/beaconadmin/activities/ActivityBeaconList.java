@@ -90,13 +90,18 @@ public class ActivityBeaconList extends AppCompatActivity{
 
                                         iBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
 
-                                        Intent i = new Intent();
-                                        i.putExtra(BEACON_JSON, iBeacon.toString());
-                                        setResult(RC, i);
+                                        submitResult(iBeacon.toString());
+
                                     }
                                     catch (JSONException exp)
                                     {
                                         exp.printStackTrace();
+                                        Helpers.showDialog(ActivityBeaconList.this, "Error", exp.getMessage(), "Close", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -108,7 +113,7 @@ public class ActivityBeaconList extends AppCompatActivity{
         eddyFragment = TabFragment.EddyFragment.getInstance(new EddyListAdapter.EddyListClickListener() {
             @Override
             public void onClick(BeaconHelper.EddystoneWrapper beaconWrapper) {
-                Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Add Beacon",
+                Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Yes",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -122,14 +127,18 @@ public class ActivityBeaconList extends AppCompatActivity{
                                         eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, beaconWrapper.device.getTelemetry().toString());
 
                                         eddyBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
+                                        submitResult(eddyBeacon.toString());
 
-                                        Intent i = new Intent();
-                                        i.putExtra(BEACON_JSON, eddyBeacon.toString());
-                                        setResult(RC, i);
                                     }
                                     catch (JSONException exp)
                                     {
                                         exp.printStackTrace();
+                                        Helpers.showDialog(ActivityBeaconList.this, "Error", exp.getMessage(), "Close", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -180,6 +189,15 @@ public class ActivityBeaconList extends AppCompatActivity{
 
         }
 
+
+    }
+
+    void submitResult(String result)
+    {
+        Intent i = new Intent();
+        i.putExtra(BEACON_JSON, result);
+        setResult(RC, i);
+        finish();
 
     }
 }

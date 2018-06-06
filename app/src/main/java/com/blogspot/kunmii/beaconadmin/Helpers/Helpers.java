@@ -31,6 +31,14 @@ public class Helpers {
         build.show();
     }
 
+    public static void showDialog(Context activity, String title,String text)
+    {
+        AlertDialog.Builder build = new AlertDialog.Builder(activity);
+        build.setTitle(title);
+        build.setMessage(text);
+        build.show();
+    }
+
     public static void storeUserToken(String token, Application appContext)
     {
         SharedPreferences defaultPreference = PreferenceManager.getDefaultSharedPreferences(appContext);

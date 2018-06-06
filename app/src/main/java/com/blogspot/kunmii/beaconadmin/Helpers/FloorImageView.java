@@ -30,8 +30,12 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
     private Bitmap iBeaconPin;
     private Bitmap eddyPin;
+    private Bitmap unsavedPin;
 
     List<Beacon> beacons = null;
+    List<Beacon> unsavedBeacons = null;
+
+    boolean dropPinMode = false;
 
     public FloorImageView(Context context) {
         this(context, null);
@@ -48,8 +52,9 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
         invalidate();
     }
 
-    public void setBeacons(List<Beacon> data){
+    public void setBeacons(List<Beacon> data, List<Beacon> unsavedBeacons){
         beacons = data;
+        this.unsavedBeacons = unsavedBeacons;
     }
 
     private void initialise() {
@@ -59,7 +64,8 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
         float w = (density/420f) * Config.ICON_WIDTH;
         float h = (density/420f) * Config.ICON_HEIGHT;
         iBeaconPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon), (int)w, (int)h, true);
-        eddyPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon), (int)w, (int)h, true);
+        eddyPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_unsaved), (int)w, (int)h, true);
+        unsavedPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_unsaved), (int)w, (int)h, true);
 
     }
 
@@ -81,7 +87,7 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
             {
 
                 //Todo make below computation more efficient
-                PointF vPin =b.getCoordsAsPixel(imageWidth,imageHeight);
+                PointF vPin = b.getCoordsAsPixel(imageWidth,imageHeight);
                 PointF vCenter = sourceToViewCoord(vPin);
 
                 Bitmap icon = null;
@@ -96,8 +102,20 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
                 float vY = vCenter.y - icon.getHeight();
 
                 canvas.drawBitmap(icon, vX, vY, paint);
+            }
 
+            if(unsavedBeacons!=null)
+            for (Beacon b : unsavedBeacons)
+            {
+                PointF vPin = b.getCoordsAsPixel(imageWidth,imageHeight);
+                PointF vCenter = sourceToViewCoord(vPin);
 
+                Bitmap icon = unsavedPin;
+
+                float vX = vCenter.x - (icon.getWidth()/2);
+                float vY = vCenter.y - icon.getHeight();
+
+                canvas.drawBitmap(icon, vX, vY, paint);
             }
         }
 
@@ -111,7 +129,6 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
         imageHeight = bitmap.getHeight();
         imageWidth = bitmap.getWidth();
 
-
     }
 
     @Override
@@ -122,5 +139,17 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
     @Override
     public void onPrepareLoad(Drawable placeHolderDrawable) {
 
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setDropPinMode(boolean dropPinMode) {
+        this.dropPinMode = dropPinMode;
     }
 }
