@@ -15,15 +15,19 @@ public class ServerResponse {
     {
         try {
             jsonBody = response.body().string();
+            code = response.code();
+            exception = !response.isSuccessful();
+            reason = response.message();
+
         }
-        catch (IOException exp)
+        catch (Exception exp)
         {
+            reason = "";
+            code = -1;
+            exception = true;
             exp.printStackTrace();
         }
 
-        code = response.code();
-        exception = !response.isSuccessful();
-        reason = response.message();
     }
 
     public int getCode() {

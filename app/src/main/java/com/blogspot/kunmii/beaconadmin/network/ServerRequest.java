@@ -63,6 +63,9 @@ public class ServerRequest {
                 }
                 catch (Exception exp)
                 {
+                    ServerResponse response = new ServerResponse(null);
+
+                    listener.onResponse(response);
                     exp.printStackTrace();
                 }
             }).start();

@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.blogspot.kunmii.beaconadmin.AppDatabase;
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
@@ -134,5 +135,17 @@ public class MainActivity extends AppCompatActivity {
             //not granted permission
             //show some explanation dialog that some features will not work
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.logout:
+                viewModel.LogOut();
+                startActivityForResult(new Intent(this, LoginActivity.class),1);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

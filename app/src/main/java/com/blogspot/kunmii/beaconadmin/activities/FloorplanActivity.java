@@ -16,19 +16,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
 import com.blogspot.kunmii.beaconadmin.Config;
-import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.Helpers.FloorImageView;
 import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
+import com.blogspot.kunmii.beaconadmin.Helpers.ISaveBeaconLResultListener;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
 import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
-import com.blogspot.kunmii.beaconadmin.data.Project;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -36,7 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FloorplanActivity extends AppCompatActivity{
+public class FloorplanActivity extends AppCompatActivity {
 
     AppBarLayout layout;
     Toolbar toolbar;
@@ -57,6 +56,7 @@ public class FloorplanActivity extends AppCompatActivity{
     FloorImageView imageView;
     Beacon newBeacon = null;
 
+    ProgressBar progressBar = null;
 
 
     @Override
@@ -71,17 +71,17 @@ public class FloorplanActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        catch (NullPointerException eexp)
-        {
+        } catch (NullPointerException eexp) {
             eexp.printStackTrace();
         }
+
+        progressBar = findViewById(R.id.progressbar);
 
         floorplanId = getIntent().getStringExtra(FLOORPLAN_ID);
         projectId = getIntent().getStringExtra(PROJECT_ID);
 
 
-        imageView = (FloorImageView)findViewById(R.id.floorplan_view);
+        imageView = (FloorImageView) findViewById(R.id.floorplan_view);
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
 
             @Override
@@ -91,12 +91,11 @@ public class FloorplanActivity extends AppCompatActivity{
                 if (imageView.isReady()) {
                     PointF sCoord = imageView.viewToSourceCoord(e.getX(), e.getY());
 
-                    if(newBeacon!=null)
-                    {
+                    if (newBeacon != null) {
                         int imageWidth = imageView.getImageWidth();
                         int imageheight = imageView.getImageHeight();
 
-                        if(sCoord!=null) {
+                        if (sCoord != null) {
                             newBeacon.setX((sCoord.x / imageWidth) * 100);
                             newBeacon.setY((sCoord.y / imageheight) * 100);
                         }
@@ -120,9 +119,7 @@ public class FloorplanActivity extends AppCompatActivity{
                             imageView.invalidate();
                             invalidateOptionsMenu();
 
-                        }
-                        catch (Exception exp)
-                        {
+                        } catch (Exception exp) {
                             exp.printStackTrace();
                             Helpers.showDialog(FloorplanActivity.this, "An Error Occured", exp.getMessage());
 
@@ -145,33 +142,36 @@ public class FloorplanActivity extends AppCompatActivity{
         });
 
 
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(viewModel == null) {
+        if (viewModel == null) {
             viewModel = ViewModelProviders.of(this).get(ApplicationViewModel.class);
 
             viewModel.getFloorplanWithId(floorplanId).observe(this, new Observer<FloorplanWithBeacons>() {
                 @Override
                 public void onChanged(@Nullable FloorplanWithBeacons floorplanWithBeacons) {
 
-                    if(floorplanWithBeacons.getFloorPlan()!=null) {
+                    if (floorplanWithBeacons.getFloorPlan() != null) {
 
                         floorPlan = floorplanWithBeacons.getFloorPlan();
                         beacons = floorplanWithBeacons.getBeacons();
 
                         toolbar.setSubtitle(String.valueOf(floorPlan.getName()));
 
-                        Picasso.get().load(Config.generateImageUrl(floorPlan.getFileurl())).into(imageView);
+                        if(!imageView.hasImageAlready())
+                            Picasso.get().load(Config.generateImageUrl(floorPlan.getFileurl())).into(imageView);
 
                         //imageView.initialize
                         floorPlan = floorplanWithBeacons.getFloorPlan();
                         beacons = floorplanWithBeacons.getBeacons();
+
+                        newBeacons.clear();
                         imageView.setBeacons(beacons, newBeacons);
 
+                        progressBar.setVisibility(View.GONE);
 
                     }
                 }
@@ -179,10 +179,9 @@ public class FloorplanActivity extends AppCompatActivity{
 
             viewModel.getProject(projectId).observe(this, (project -> {
 
-                    if(project!=null)
-                    {
-                        toolbar.setTitle(String.valueOf(project.getName()));
-                    }
+                if (project != null) {
+                    toolbar.setTitle(String.valueOf(project.getName()));
+                }
 
             }));
         }
@@ -191,8 +190,7 @@ public class FloorplanActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -200,11 +198,28 @@ public class FloorplanActivity extends AppCompatActivity{
             case R.id.addbeacon:
                 // Create and show the dialog.
                 Intent i = new Intent(this, ActivityBeaconList.class);
-                startActivityForResult(i,ActivityBeaconList.RC);
+                startActivityForResult(i, ActivityBeaconList.RC);
                 break;
 
-        }
 
+            case R.id.savebeacons:
+                progressBar.setVisibility(View.VISIBLE);
+
+                viewModel.saveBeacons(
+                        (boolean success)->{
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            });
+                        },
+                        newBeacons,
+                        projectId,
+                        floorplanId);
+
+
+        }
 
 
         return super.onOptionsItemSelected(item);
@@ -212,7 +227,7 @@ public class FloorplanActivity extends AppCompatActivity{
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(newBeacons.size()>0)
+        if (newBeacons.size() > 0)
             menu.findItem(R.id.savebeacons).setVisible(true);
         else
             menu.findItem(R.id.savebeacons).setVisible(false);
@@ -234,8 +249,7 @@ public class FloorplanActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == ActivityBeaconList.RC)
-        {
+        if (requestCode == ActivityBeaconList.RC) {
 
             newBeacon = new Beacon();
 
@@ -249,9 +263,7 @@ public class FloorplanActivity extends AppCompatActivity{
                 imageView.setDropPinMode(true);
 
 
-            }
-            catch (Exception exp)
-            {
+            } catch (Exception exp) {
                 exp.printStackTrace();
                 Helpers.showDialog(this, "Error", exp.getMessage(), "Close", new DialogInterface.OnClickListener() {
                     @Override
@@ -261,8 +273,10 @@ public class FloorplanActivity extends AppCompatActivity{
                 });
             }
         }
+    }
 
 
+    public void saveBeacons() {
 
     }
 }

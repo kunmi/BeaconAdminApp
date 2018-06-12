@@ -38,5 +38,12 @@ public abstract class AppDatabase extends RoomDatabase{
     }
 
 
+    public void CLEAR_ALL(){
+        beaconDAO().nukeAll();
+        floorplanDAO().nukeAll();
+        projectDAO().nukeAll();
+    }
+
+
 
 }

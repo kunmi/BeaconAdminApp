@@ -2,23 +2,17 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "07d7e2da2167cfd0195ddbef9a845257",
+    "identityHash": "82414f623bbb3e9f3c5754f602d00e72",
     "entities": [
       {
         "tableName": "projects",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `objectid` TEXT, `name` TEXT, `email` TEXT, `description` TEXT, `updated` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`objectid` TEXT NOT NULL, `name` TEXT, `email` TEXT, `description` TEXT, `updated` TEXT, PRIMARY KEY(`objectid`))",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "objectId",
             "columnName": "objectid",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -47,28 +41,22 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "objectid"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "beacon",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `objectid` TEXT, `floorplanid` TEXT, `projectid` TEXT, `type` TEXT, `x` REAL NOT NULL, `y` REAL NOT NULL, `ref` TEXT, `txpower` TEXT, `beacon` TEXT, `updated` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`objectid` TEXT NOT NULL, `floorplanid` TEXT, `projectid` TEXT, `type` TEXT, `x` REAL NOT NULL, `y` REAL NOT NULL, `ref` TEXT, `txpower` TEXT, `beacon` TEXT, `updated` TEXT, PRIMARY KEY(`objectid`))",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "objectId",
             "columnName": "objectid",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "floorPlanId",
@@ -127,28 +115,22 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "objectid"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "floorplan",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `objectid` TEXT, `projectid` TEXT, `name` TEXT, `url` TEXT, `updated` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`objectid` TEXT NOT NULL, `projectid` TEXT, `name` TEXT, `url` TEXT, `updated` TEXT, PRIMARY KEY(`objectid`))",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "objectId",
             "columnName": "objectid",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "projectObjectId",
@@ -177,9 +159,9 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "objectid"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -187,7 +169,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"07d7e2da2167cfd0195ddbef9a845257\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"82414f623bbb3e9f3c5754f602d00e72\")"
     ]
   }
 }

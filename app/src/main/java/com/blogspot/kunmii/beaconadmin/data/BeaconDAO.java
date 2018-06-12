@@ -30,5 +30,11 @@ public interface BeaconDAO {
     @Delete
     void delete(Beacon beacon);
 
+    @Query("DELETE FROM beacon WHERE projectid = :projectId AND floorplanid = :floorplanId")
+    void nukeAll(String projectId, String floorplanId);
+
+    @Query("DELETE FROM  beacon")
+    void nukeAll();
+
 
 }

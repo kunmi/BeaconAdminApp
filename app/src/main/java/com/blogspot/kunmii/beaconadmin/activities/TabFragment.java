@@ -103,7 +103,6 @@ public class TabFragment {
 
             recyclerView.setAdapter(adapter);
 
-
             return v;
         }
 

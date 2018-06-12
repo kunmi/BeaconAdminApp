@@ -24,8 +24,8 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
     private final PointF vPin = new PointF();
     private PointF sPin;
 
-    int imageWidth;
-    int imageHeight;
+    int imageWidth = -1;
+    int imageHeight = -1;
 
 
     private Bitmap iBeaconPin;
@@ -55,6 +55,7 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
     public void setBeacons(List<Beacon> data, List<Beacon> unsavedBeacons){
         beacons = data;
         this.unsavedBeacons = unsavedBeacons;
+        invalidate();
     }
 
     private void initialise() {
@@ -64,7 +65,7 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
         float w = (density/420f) * Config.ICON_WIDTH;
         float h = (density/420f) * Config.ICON_HEIGHT;
         iBeaconPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon), (int)w, (int)h, true);
-        eddyPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_unsaved), (int)w, (int)h, true);
+        eddyPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_eddy), (int)w, (int)h, true);
         unsavedPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_unsaved), (int)w, (int)h, true);
 
     }
@@ -151,5 +152,9 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
     public void setDropPinMode(boolean dropPinMode) {
         this.dropPinMode = dropPinMode;
+    }
+
+    public boolean hasImageAlready(){
+        return imageWidth >0 && imageHeight >0;
     }
 }

@@ -3,10 +3,14 @@ package com.blogspot.kunmii.beaconadmin;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
+import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
+import com.blogspot.kunmii.beaconadmin.Helpers.ISaveBeaconLResultListener;
+import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
 import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
 import com.blogspot.kunmii.beaconadmin.data.Project;
@@ -20,7 +24,7 @@ public class ApplicationViewModel extends AndroidViewModel{
 
 
     AppRepository repository;
-    private LiveData<List<Project>> projects;
+    private LiveData<List<Project>> projects = null;
 
     BeaconHelper beaconHelper = null;
 
@@ -29,7 +33,16 @@ public class ApplicationViewModel extends AndroidViewModel{
     {
         super(application);
         repository = new AppRepository(application);
-        projects = repository.getAssignedProjects();
+        projects = repository.projecDao.getAll();
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                projects = repository.getAssignedProjects();
+
+            }
+        }).start();
     }
 
 
@@ -59,6 +72,28 @@ public class ApplicationViewModel extends AndroidViewModel{
         return getBeaconHelper(getApplication()).getEddystoneDeviceLiveData();
     }
 
+
+    public void saveBeacons(@Nullable ISaveBeaconLResultListener resultListener, List<Beacon> data, String projectId, String flooarplanId)
+    {
+        repository.uploadBeacons(
+                resultListener,
+                data,
+                projectId,
+                flooarplanId
+                );
+    }
+
+
+    public void LogOut()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Helpers.clearALlData(getApplication());
+                repository.db.CLEAR_ALL();
+            }
+        }).start();
+    }
 
 
 

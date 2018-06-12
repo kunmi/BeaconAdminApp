@@ -124,7 +124,11 @@ public class ActivityBeaconList extends AppCompatActivity{
                                     try {
                                         eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID, beaconWrapper.device.getNamespace());
                                         eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID, beaconWrapper.device.getInstanceId());
-                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, beaconWrapper.device.getTelemetry().toString());
+
+                                        if(beaconWrapper.device.getTelemetry()!=null)
+                                            eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, beaconWrapper.device.getTelemetry().toString());
+                                        else
+                                            eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, null);
 
                                         eddyBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
                                         submitResult(eddyBeacon.toString());

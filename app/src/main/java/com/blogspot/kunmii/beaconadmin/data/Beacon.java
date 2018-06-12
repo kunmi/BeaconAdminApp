@@ -6,13 +6,14 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
+
 
 @Entity(tableName = "beacon")
 public class Beacon {
 
-    @PrimaryKey(autoGenerate = true)
-    int id;
-
+    @NonNull
+    @PrimaryKey()
     @ColumnInfo(name  = "objectid")
     String objectId;
 
@@ -44,14 +45,6 @@ public class Beacon {
 
     @ColumnInfo(name = "updated")
     String updated;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getObjectId() {
         return objectId;
