@@ -106,9 +106,7 @@ public class AppRepository {
                 {
                     String res = response.getJsonBody();
 
-
                     try {
-
                         JSONObject resultJSON = new JSONObject(res);
 
                         List<Beacon> beacons = processBeaconArray(resultJSON.getJSONArray(Config.NETWORK_JSON_NODE.FLOORPLAN_BEACONS),
@@ -229,10 +227,78 @@ public class AppRepository {
                 beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.CREATED));
             }
 
+
+            beacon.setBeaconData(beaconJson.toString());
+
             beaconList.add(beacon);
         }
 
         return beaconList;
+    }
+
+
+    public void updateBeacon(Application application, Beacon beacon, ISaveBeaconLResultListener resultListener)
+    {
+        ServerRequest request = Helpers.craftBeaconUpdateRequest(application, beacon);
+        request.execute((ServerResponse response)->{
+
+            if(!response.hasException())
+            {
+                String result = response.getJsonBody();
+                try {
+
+                    JSONObject resultJSON = new JSONObject(result);
+
+                    if(resultJSON.getBoolean(Config.NETWORK_JSON_NODE.SUCCESS))
+                    {
+                        JSONObject beaconJson = resultJSON.getJSONObject(Config.NETWORK_JSON_NODE.JUST_BEACON);
+                        beacon.setBeaconData(beaconJson.toString());
+
+
+                        JSONObject mapJson = beaconJson.getJSONObject(Config.NETWORK_JSON_NODE.BEACON_MAP);
+
+                        beacon.setX(mapJson.getDouble(Config.NETWORK_JSON_NODE.BEACON_MAP_X));
+                        beacon.setY(mapJson.getDouble(Config.NETWORK_JSON_NODE.BEACON__MAP_Y));
+
+                        beacon.setType(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_TYPE));
+
+                        beacon.setRef(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_REF));
+                        beacon.setTxpower(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_TXPOWER));
+
+                        if(beaconJson.has(Config.NETWORK_JSON_NODE.UPDATED))
+                        {
+                            beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.UPDATED));
+                        }
+                        else
+                        {
+                            beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.CREATED));
+                        }
+
+
+                        beacon.setBeaconData(beaconJson.toString());
+
+                        beaconDAO.insertBeacon(beacon);
+                        resultListener.onDone(true);
+                        return;
+
+                    }
+
+                    resultListener.onDone(false);
+                    return;
+
+                }
+                catch (JSONException exp)
+                {
+                    exp.printStackTrace();
+
+
+                }
+            }
+            resultListener.onDone(false);
+            return;
+
+
+        });
     }
 
 }

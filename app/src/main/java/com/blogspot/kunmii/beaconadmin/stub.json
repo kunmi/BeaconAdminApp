@@ -46,5 +46,9 @@
     ],
     "created": "2018-06-05T20:41:48.126Z",
     "updated": "2018-06-05T20:41:48.126Z"
-  }
+  },
+  {"success":true,"beacon":{"map":{"x":"23.53515625","y":"67.7056884765625"},"frameType":"UID","txPower":"-36","updated":"2018-06-15T15:06:52.351Z","type":"eddystone","_id":"5b1fd2a5659aa92116024a80","nameSpaceId":"f7826da6bc5b71e0893e","instanceId":"4c5a726a7472","ref":5,"created":"2018-06-12T14:03:17.767Z","lastSeen":"2018-06-15T15:06:52.351Z","telemetry":""}}
 ]
+
+
+

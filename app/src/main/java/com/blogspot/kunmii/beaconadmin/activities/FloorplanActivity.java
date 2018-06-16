@@ -4,10 +4,13 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
@@ -21,9 +24,9 @@ import android.widget.Toast;
 
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
 import com.blogspot.kunmii.beaconadmin.Config;
+import com.blogspot.kunmii.beaconadmin.Dialog.DialogBeacon;
 import com.blogspot.kunmii.beaconadmin.Helpers.FloorImageView;
 import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
-import com.blogspot.kunmii.beaconadmin.Helpers.ISaveBeaconLResultListener;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
@@ -83,6 +86,68 @@ public class FloorplanActivity extends AppCompatActivity {
 
         imageView = (FloorImageView) findViewById(R.id.floorplan_view);
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+
+                if(imageView.isReady()) {
+
+                    PointF tappedPoint = new PointF(e.getX(), e.getY());
+
+                    for(Beacon b : beacons) {
+
+                        PointF beaconCoords = imageView.sourceToViewCoord(b.getCoordsAsPixel(imageView.getImageWidth(), imageView.getImageHeight()));
+                        Bitmap pin = imageView.getPin(b);
+
+                        Float pictureStartX = beaconCoords.x - (pin.getWidth() / 2);
+                        Float pictureEndX = beaconCoords.x + (pin.getWidth() / 2);
+
+                        Float pictureStartY = beaconCoords.y - (pin.getHeight());
+                        Float pictureEndY = beaconCoords.y;
+
+                        if (tappedPoint.x >= pictureStartX &&
+                                tappedPoint.x <= pictureEndX &&
+                                tappedPoint.y >= pictureStartY &&
+                                tappedPoint.y <= pictureEndY) {
+
+                            DialogBeacon dialogBeacon = new DialogBeacon();
+                            dialogBeacon.setBeacon(b, (beac)->{
+                                if(beac!=null)
+                                   viewModel.updateBeacon(beac, (successful)->{
+
+                                       runOnUiThread(new Runnable() {
+                                           @Override
+                                           public void run() {
+                                               if(successful)
+                                                   Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
+                                               else
+                                                   Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
+                                           }
+                                       });
+                                   });
+
+                            });
+
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+
+                            // Create and show the dialog.
+                            dialogBeacon.show(ft,"dialog");
+
+                        }
+
+                    }
+
+
+                }
+
+
+                return super.onSingleTapConfirmed(e);
+            }
 
             @Override
             public void onLongPress(MotionEvent e) {

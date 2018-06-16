@@ -16,6 +16,9 @@ public interface BeaconDAO {
     @Query("SELECT * FROM beacon WHERE projectid = :projectId AND floorplanid = :floorplanId")
     List<Beacon> getBeaconFromProjectWithProjectId(String projectId, String floorplanId);
 
+
+
+
     @Query("UPDATE beacon SET beacon = :beaconData, type = :type WHERE projectid = :projectId AND floorplanid = :floorplanId")
     int UpdateBeacon(String projectId, String floorplanId, String type,String beaconData);
 
@@ -24,7 +27,8 @@ public interface BeaconDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertBeacon(Beacon beacon);
 
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Beacon... beacons);
 
     @Delete

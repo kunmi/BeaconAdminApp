@@ -6,36 +6,34 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.solver.widgets.Helper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
 import com.blogspot.kunmii.beaconadmin.Config;
+import com.blogspot.kunmii.beaconadmin.Dialog.DialogAddBeacon;
+import com.blogspot.kunmii.beaconadmin.Dialog.DialogBeacon;
+import com.blogspot.kunmii.beaconadmin.Dialog.TabbedFragment;
 import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.adapters.CustomAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.EddyListAdapter;
-import com.blogspot.kunmii.beaconadmin.adapters.FloorplanAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.IBeaconAdapter;
-import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
-import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class ActivityBeaconList extends AppCompatActivity{
 
@@ -51,8 +49,8 @@ public class ActivityBeaconList extends AppCompatActivity{
     TabLayout tabLayout;
     ViewPager viewPager;
 
-    TabFragment.IBeaconFragment iBeaconFragment;
-    TabFragment.EddyFragment eddyFragment;
+    TabbedFragment.IBeaconFragment iBeaconFragment;
+    TabbedFragment.EddyFragment eddyFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +69,7 @@ public class ActivityBeaconList extends AppCompatActivity{
         viewPager = findViewById(R.id.masterViewPager);
         viewPager.setOffscreenPageLimit(3);
 
-        iBeaconFragment = TabFragment.IBeaconFragment.getInstance(new IBeaconAdapter.IbeaconListClickListener() {
+        iBeaconFragment = TabbedFragment.IBeaconFragment.getInstance(new IBeaconAdapter.IbeaconListClickListener() {
             @Override
             public void onClick(BeaconHelper.IBeaconWrapper beaconWrapper) {
 
@@ -110,7 +108,7 @@ public class ActivityBeaconList extends AppCompatActivity{
             }
         });
 
-        eddyFragment = TabFragment.EddyFragment.getInstance(new EddyListAdapter.EddyListClickListener() {
+        eddyFragment = TabbedFragment.EddyFragment.getInstance(new EddyListAdapter.EddyListClickListener() {
             @Override
             public void onClick(BeaconHelper.EddystoneWrapper beaconWrapper) {
                 Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Yes",
@@ -198,10 +196,58 @@ public class ActivityBeaconList extends AppCompatActivity{
 
     void submitResult(String result)
     {
-        Intent i = new Intent();
-        i.putExtra(BEACON_JSON, result);
-        setResult(RC, i);
+        if(result!=null) {
+            Intent i = new Intent();
+            i.putExtra(BEACON_JSON, result);
+            setResult(RC, i);
+        }
         finish();
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_beacon_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.addmanual:
+                showManualBeaconDialog();
+                break;
+
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    void showManualBeaconDialog(){
+
+        DialogAddBeacon dialogBeacon = new DialogAddBeacon();
+
+        dialogBeacon.setSaveListener(this::submitResult);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+
+
+        // Create and show the dialog.
+        dialogBeacon.show(ft,"dialog");
     }
 }

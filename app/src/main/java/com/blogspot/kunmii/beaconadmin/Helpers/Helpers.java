@@ -91,7 +91,7 @@ public class Helpers {
     public static ServerRequest craftProjectRetrieveRequest(Application application)
     {
         String token = Helpers.getUserToken(application);
-        ServerRequest request = new ServerRequest(application, Config.getGetProjectUrl());
+        ServerRequest request = new ServerRequest(application, Config.PROJECT_URL);
         request.putHeader("Authorization", token);
         request.putHeader("Content-Type", "application/json");
         return request;
@@ -100,10 +100,9 @@ public class Helpers {
     public static ServerRequest craftUploadRequest(Application application, List<Beacon> beacons, String projectId, String floorplanId)
     {
         String token = Helpers.getUserToken(application);
-        ServerRequest request = new ServerRequest(application, Config.getGetUploadUrl() + "/" + projectId + "/" + floorplanId);
+        ServerRequest request = new ServerRequest(application, Config.UPLOAD_URL + "/" + projectId + "/" + floorplanId);
         request.putHeader("Authorization", token);
         request.putHeader("Content-Type", "application/json");
-
 
         JSONArray array = new JSONArray();
 
@@ -121,6 +120,23 @@ public class Helpers {
 
         }
         request.setBody(array.toString());
+
+        return request;
+    }
+
+    public static ServerRequest craftBeaconUpdateRequest(Application application, Beacon beacon)
+    {
+        String token = Helpers.getUserToken(application);
+
+        ServerRequest request = new ServerRequest(application, Config.BEACON_UPDATE_URL + "/" +
+                beacon.getProjectId() + "/" +
+                beacon.getFloorPlanId() + "/" +
+                beacon.getObjectId());
+
+        request.putHeader("Authorization", token);
+        request.putHeader("Content-Type", "application/json");
+
+        request.setBody(beacon.getBeaconData());
 
         return request;
     }

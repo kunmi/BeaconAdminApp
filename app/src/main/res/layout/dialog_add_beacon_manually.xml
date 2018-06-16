@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="@dimen/dialog_width"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="5dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beacon Type"
+            android:textSize="15sp" />
+
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <RadioButton
+                android:id="@+id/radio_ibeacon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="iBeacon"/>
+
+            <RadioButton
+                android:id="@+id/radio_eddy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eddystone"/>
+
+        </RadioGroup>
+
+
+
+    </LinearLayout>
+
+
+
+    <!-- iBeacon -->
+    <LinearLayout
+        android:id="@+id/ibeacon_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="iBeacon"
+            android:textSize="20sp" />
+
+
+
+        <!-- Username Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText android:id="@+id/input_uuid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="UUID"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Username Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText android:id="@+id/input_major"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Major"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <!-- Username Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText android:id="@+id/input_minor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Minor"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <!-- EddyStone -->
+    <LinearLayout
+        android:id="@+id/eddy_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eddystone"
+            android:textSize="20sp" />
+
+
+
+        <!-- Username Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText android:id="@+id/input_namespace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Namespace"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Username Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText android:id="@+id/input_instanceid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Instance Id"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+    </LinearLayout>
+
+    <!-- Username Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="8dp">
+
+        <EditText android:id="@+id/input_ref"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Reference Id"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+
+</LinearLayout>
+

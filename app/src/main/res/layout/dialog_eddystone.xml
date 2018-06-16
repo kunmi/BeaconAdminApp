@@ -3,7 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="@dimen/dialog_width"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="15dp"
@@ -16,7 +15,7 @@
         style="@style/beacon_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="iBeacon"
+        android:text="Eddystone"
         android:textSize="20sp" />
 
     <RelativeLayout
@@ -27,11 +26,11 @@
         <TextView
             style="@style/beacon_text_style"
             android:layout_alignParentLeft="true"
-            android:text="UUID: " />
+            android:text="Namespace: " />
 
 
         <TextView
-            android:id="@+id/uuid_text_view"
+            android:id="@+id/namespace_text_view"
             style="@style/beacon_header"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"
@@ -49,10 +48,10 @@
             style="@style/beacon_text_style"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="Major: " />
+            android:text="Instance-ID: " />
 
         <TextView
-            android:id="@+id/major_text_view"
+            android:id="@+id/instanceid_text_view"
             style="@style/beacon_header"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -70,17 +69,18 @@
             style="@style/beacon_text_style"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="Minor: " />
+            android:text="Frametype: " />
 
         <TextView
-            android:id="@+id/minor_text_view"
+            android:id="@+id/frametype_text_view"
             style="@style/beacon_header"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"
-            android:text="" />
+            android:text="UID" />
 
     </RelativeLayout>
+
 
 
 
@@ -103,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:hint="reference number"
+            android:text=""
              />
 
 
@@ -125,6 +126,28 @@
 
         <TextView
             android:id="@+id/txpower_text_view"
+            style="@style/beacon_text_style"
+            android:layout_width="wrap_content"
+            android:text="X" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:text="Telemetry" />
+
+        <TextView
+            android:id="@+id/telemetry_text_view"
             style="@style/beacon_text_style"
             android:layout_width="wrap_content"
             android:text="X" />

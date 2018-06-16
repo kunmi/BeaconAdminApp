@@ -3,8 +3,8 @@ package com.blogspot.kunmii.beaconadmin;
 public class Config {
 
 
-    public static float ICON_HEIGHT = 50;
-    public static float ICON_WIDTH = 50;
+    public static float ICON_HEIGHT = 100;
+    public static float ICON_WIDTH = 100;
 
 
     //public static final String SERVER = "http://192.168.0.100:3000/";
@@ -12,9 +12,14 @@ public class Config {
 
 //    public static final String SERVER = "http://10.0.2.2:3000/";
     public static final String SERVER_URL = SERVER+"api/";
-    static final String LOGIN_URL = "authenticate";
-    static final String GET_PROJECT_URL = "projects";
-    static final String GET_UPLOAD_PATH = "upload";
+
+    public static final String LOGIN_URL = "authenticate";
+    public static final String PROJECT_URL = "projects";
+    public static final String UPLOAD_URL = "upload";
+
+    public static final String BEACON_UPDATE_URL = "update/beacon";
+
+
 
 
     public static final String USER_TOKEN = "user_token";
@@ -26,27 +31,17 @@ public class Config {
     public static final String IS_ADMIN = "is_admin";
 
 
-
-    public static String getLoginUrl() {
-        return LOGIN_URL;
-    }
-
-    public static String getGetProjectUrl() {
-        return GET_PROJECT_URL;
-    }
-
-    //if you're meant for each other
-
-    public static String getGetUploadUrl(){
-        return GET_UPLOAD_PATH;
-    }
-
     public static String generateImageUrl(String path){
         return SERVER + path;
     }
 
 
     public interface NETWORK_JSON_NODE{
+
+        String SUCCESS = "success";
+        String JUST_BEACON = "beacon";
+
+
            String OBJECT_ID = "_id";
            String UPDATED = "updated";
            String CREATED = "created";

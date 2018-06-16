@@ -1,4 +1,4 @@
-package com.blogspot.kunmii.beaconadmin.activities;
+package com.blogspot.kunmii.beaconadmin.Dialog;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TabFragment {
+public class TabbedFragment {
 
     static public class IBeaconFragment extends Fragment
     {

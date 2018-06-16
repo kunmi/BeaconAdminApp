@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "beacon")
 public class Beacon {
 
+
     @NonNull
     @PrimaryKey()
     @ColumnInfo(name  = "objectid")
@@ -138,4 +139,5 @@ public class Beacon {
     public PointF getCoordsAsPixel(int width, int height){
         return new PointF((float) (x/100)*width, (float) (y/100) * height);
     }
+
 }

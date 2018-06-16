@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity{
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBody.toString());
 
                     Request request = new Request.Builder()
-                            .url(Config.SERVER_URL + Config.getLoginUrl())
+                            .url(Config.SERVER_URL + Config.LOGIN_URL)
                             .post(requestBody)
                             .build();
 

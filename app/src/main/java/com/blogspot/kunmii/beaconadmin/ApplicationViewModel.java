@@ -65,11 +65,11 @@ public class ApplicationViewModel extends AndroidViewModel{
 
 
     public LiveData<HashMap<String, BeaconHelper.IBeaconWrapper>> getIbeaconDevices(){
-        return getBeaconHelper(getApplication()).getIBeaconDeviceLiveData();
+        return getBeaconHelper().getIBeaconDeviceLiveData();
     }
 
     public LiveData<HashMap<String, BeaconHelper.EddystoneWrapper>> getEddystoneDevices(){
-        return getBeaconHelper(getApplication()).getEddystoneDeviceLiveData();
+        return getBeaconHelper().getEddystoneDeviceLiveData();
     }
 
 
@@ -97,7 +97,7 @@ public class ApplicationViewModel extends AndroidViewModel{
 
 
 
-    public BeaconHelper getBeaconHelper(Application application){
+    public BeaconHelper getBeaconHelper(){
 
         if(beaconHelper == null)
         {
@@ -107,6 +107,10 @@ public class ApplicationViewModel extends AndroidViewModel{
         beaconHelper.onStart();
 
         return beaconHelper;
+    }
+
+    public void updateBeacon(Beacon beacon, ISaveBeaconLResultListener resultListener){
+        repository.updateBeacon(getApplication(), beacon, resultListener);
     }
 
 }

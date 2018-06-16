@@ -157,4 +157,12 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
     public boolean hasImageAlready(){
         return imageWidth >0 && imageHeight >0;
     }
+
+    public Bitmap getPin(Beacon b)
+    {
+        if(b.isIbeacon())
+            return iBeaconPin;
+        else
+            return eddyPin;
+    }
 }
