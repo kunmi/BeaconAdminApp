@@ -4,6 +4,7 @@ package com.blogspot.kunmii.beaconadmin.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
@@ -46,6 +47,12 @@ public class Beacon {
 
     @ColumnInfo(name = "updated")
     String updated;
+
+
+    @Ignore
+    public Proximity proximity = Proximity.OUT_OF_RANGE;
+
+
 
     public String getObjectId() {
         return objectId;
@@ -128,6 +135,9 @@ public class Beacon {
         this.updated = updated;
     }
 
+
+
+
     public boolean isIbeacon(){
         if(type.equals("iBeacon"))
             return true;
@@ -135,9 +145,26 @@ public class Beacon {
             return false;
     }
 
+    @Ignore
     //Image is stored as percentage relative to the image size.
     public PointF getCoordsAsPixel(int width, int height){
         return new PointF((float) (x/100)*width, (float) (y/100) * height);
+    }
+
+    public enum Proximity{
+
+        // 0 - 0.5m
+        IMMEDIATE,
+
+        // 0.5 - 3m
+        NEAR,
+
+        // 3m
+        FAR,
+
+        // ??m
+        OUT_OF_RANGE
+
     }
 
 }

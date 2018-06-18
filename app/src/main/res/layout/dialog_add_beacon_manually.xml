@@ -10,7 +10,6 @@
     android:paddingRight="16dp"
     android:paddingTop="5dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +22,6 @@
             android:layout_height="wrap_content"
             android:text="Beacon Type"
             android:textSize="15sp" />
-
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -95,6 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Major"
+                android:inputType="number"
                 />
 
         </android.support.design.widget.TextInputLayout>
@@ -111,6 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Minor"
+                android:inputType="number"
                 />
         </android.support.design.widget.TextInputLayout>
 

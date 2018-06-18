@@ -13,7 +13,7 @@ import com.blogspot.kunmii.beaconadmin.data.FloorplanDAO;
 import com.blogspot.kunmii.beaconadmin.data.Project;
 import com.blogspot.kunmii.beaconadmin.data.ProjectDAO;
 
-@Database(entities = {Project.class, Beacon.class, FloorPlan.class}, version = 2)
+@Database(entities = {Project.class, Beacon.class, FloorPlan.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase{
 
     public static final String DATABASE_NAME = "beaconadmindb";

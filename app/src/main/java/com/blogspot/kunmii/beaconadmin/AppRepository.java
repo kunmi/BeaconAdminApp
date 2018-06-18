@@ -36,8 +36,7 @@ public class AppRepository {
 
     LiveData<List<Project>> projects;
 
-    public AppRepository(Application application)
-    {
+    public AppRepository(Application application) {
         mContext = application;
         db = AppDatabase.getInstance(mContext);
 
@@ -48,7 +47,7 @@ public class AppRepository {
         projects = projecDao.getAll();
     }
 
-    public LiveData<List<Project>> getAssignedProjects(){
+    public LiveData<List<Project>> getAssignedProjects() {
         checkForUpdates();
         return projects;
     }
@@ -61,26 +60,24 @@ public class AppRepository {
         return projects;
     }
 
-    public LiveData<FloorplanWithBeacons> getFLoorplanWithId(String objectId)
-    {
+    public LiveData<FloorplanWithBeacons> getFLoorplanWithId(String objectId) {
         return floorplanDao.getFloorplansBeacons(objectId);
 
     }
 
-    public void checkForUpdates(){
+    public void checkForUpdates() {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 List<Project> projs = projecDao.getProjectsRaw();
 
-                if(projs == null || projs.size()==0)
-                {
+                if (projs == null || projs.size() == 0) {
                     ServerRequest request = Helpers.craftProjectRetrieveRequest(mContext);
                     request.execute(new IServerRequestListener() {
                         @Override
                         public void onResponse(ServerResponse response) {
-                            String res  = response.getJsonBody();
+                            String res = response.getJsonBody();
 
                             processProjectJSONArray(res);
 
@@ -94,7 +91,7 @@ public class AppRepository {
         }).start();
     }
 
-    void uploadBeacons(@Nullable ISaveBeaconLResultListener listener, List<Beacon> data, String projectId, String flooarplanId){
+    void uploadBeacons(@Nullable ISaveBeaconLResultListener listener, List<Beacon> data, String projectId, String flooarplanId) {
 
         ServerRequest request = Helpers.craftUploadRequest(mContext, data, projectId, flooarplanId);
         request.execute(new IServerRequestListener() {
@@ -102,8 +99,7 @@ public class AppRepository {
             public void onResponse(ServerResponse response) {
 
 
-                if(!response.hasException())
-                {
+                if (!response.hasException()) {
                     String res = response.getJsonBody();
 
                     try {
@@ -117,13 +113,11 @@ public class AppRepository {
                         beaconDAO.insertAll(beacons.toArray(new Beacon[beacons.size()]));
 
 
-                        if(listener!=null)
+                        if (listener != null)
                             listener.onDone(true);
                         return;
 
-                    }
-                    catch (JSONException exp)
-                    {
+                    } catch (JSONException exp) {
                         exp.printStackTrace();
                     }
 
@@ -136,71 +130,61 @@ public class AppRepository {
         });
     }
 
-    void processProjectJSONArray(String res)
-    {
-        try {
-            JSONArray array = new JSONArray(res);
-            for(int i=0; i< array.length(); i++)
-            {
-                JSONObject jsonObject = array.getJSONObject(i);
+    void processProjectJSONArray(String res) {
+        if (res != null)
+            try {
+                JSONArray array = new JSONArray(res);
+                if (res != null)
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonObject = array.getJSONObject(i);
 
-                Project project = new Project();
-                project.setObjectId(jsonObject.getString(Config.NETWORK_JSON_NODE.OBJECT_ID));
-                project.setDescription(jsonObject.getString(Config.NETWORK_JSON_NODE.PROJECT_DESCRIPTION));
-                project.setEmail(jsonObject.getString(Config.NETWORK_JSON_NODE.PROJECT_EMAIL));
-                project.setName(jsonObject.getString(Config.NETWORK_JSON_NODE.PROJECT_NAME));
+                        Project project = new Project();
+                        project.setObjectId(jsonObject.getString(Config.NETWORK_JSON_NODE.OBJECT_ID));
+                        project.setDescription(jsonObject.getString(Config.NETWORK_JSON_NODE.PROJECT_DESCRIPTION));
+                        project.setEmail(jsonObject.getString(Config.NETWORK_JSON_NODE.PROJECT_EMAIL));
+                        project.setName(jsonObject.getString(Config.NETWORK_JSON_NODE.PROJECT_NAME));
 
-                if(jsonObject.has(Config.NETWORK_JSON_NODE.UPDATED))
-                {
+                        if (jsonObject.has(Config.NETWORK_JSON_NODE.UPDATED)) {
 
-                    project.setUpdated(jsonObject.getString(Config.NETWORK_JSON_NODE.UPDATED));
-                }
-                else
-                {
-                    project.setUpdated(jsonObject.getString(Config.NETWORK_JSON_NODE.CREATED));
-                }
+                            project.setUpdated(jsonObject.getString(Config.NETWORK_JSON_NODE.UPDATED));
+                        } else {
+                            project.setUpdated(jsonObject.getString(Config.NETWORK_JSON_NODE.CREATED));
+                        }
 
 
-                JSONArray floorplanArray = jsonObject.getJSONArray(Config.NETWORK_JSON_NODE.PROJECT_FLOORPLANS);
-                for(int j=0; j< floorplanArray.length(); j++)
-                {
-                    JSONObject jsonFloorplan = floorplanArray.getJSONObject(i);
+                        JSONArray floorplanArray = jsonObject.getJSONArray(Config.NETWORK_JSON_NODE.PROJECT_FLOORPLANS);
+                        for (int j = 0; j < floorplanArray.length(); j++) {
+                            JSONObject jsonFloorplan = floorplanArray.getJSONObject(i);
 
-                    FloorPlan floorPlan = new FloorPlan();
-                    floorPlan.setProjectObjectId(project.getObjectId());
-                    floorPlan.setName(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.FLOORPLAN_NAME));
-                    floorPlan.setObjectId(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.OBJECT_ID));
-                    floorPlan.setFileurl(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.FLOORPLAN_URL));
+                            FloorPlan floorPlan = new FloorPlan();
+                            floorPlan.setProjectObjectId(project.getObjectId());
+                            floorPlan.setName(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.FLOORPLAN_NAME));
+                            floorPlan.setObjectId(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.OBJECT_ID));
+                            floorPlan.setFileurl(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.FLOORPLAN_URL));
 
-                    if(jsonFloorplan.has(Config.NETWORK_JSON_NODE.UPDATED))
-                    {
-                        floorPlan.setUpdated(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.UPDATED));
+                            if (jsonFloorplan.has(Config.NETWORK_JSON_NODE.UPDATED)) {
+                                floorPlan.setUpdated(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.UPDATED));
+                            } else {
+                                floorPlan.setUpdated(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.CREATED));
+                            }
+
+                            JSONArray beaconArray = jsonFloorplan.getJSONArray(Config.NETWORK_JSON_NODE.FLOORPLAN_BEACONS);
+
+                            List<Beacon> beacons = processBeaconArray(beaconArray, floorPlan.getObjectId(), project.getObjectId());
+                            beaconDAO.insertAll(beacons.toArray(new Beacon[beacons.size()]));
+
+                            floorplanDao.insert(floorPlan);
+                        }
+                        projecDao.insertAll(project);
                     }
-                    else
-                    {
-                        floorPlan.setUpdated(jsonFloorplan.getString(Config.NETWORK_JSON_NODE.CREATED));
-                    }
-
-                    JSONArray beaconArray = jsonFloorplan.getJSONArray(Config.NETWORK_JSON_NODE.FLOORPLAN_BEACONS);
-
-                    List<Beacon> beacons = processBeaconArray(beaconArray, floorPlan.getObjectId(), project.getObjectId());
-                    beaconDAO.insertAll(beacons.toArray(new Beacon[beacons.size()]));
-
-                    floorplanDao.insert(floorPlan);
-                }
-                projecDao.insertAll(project);
+            } catch (JSONException exp) {
+                exp.printStackTrace();
             }
-        }
-        catch (JSONException exp)
-        {
-            exp.printStackTrace();
-        }
     }
 
-    List<Beacon> processBeaconArray(JSONArray beaconArray, String floorPlanId, String projectId) throws JSONException{
+    List<Beacon> processBeaconArray(JSONArray beaconArray, String floorPlanId, String projectId) throws JSONException {
         List<Beacon> beaconList = new ArrayList<>();
-        for(int k=0; k<beaconArray.length(); k++)
-        {
+        for (int k = 0; k < beaconArray.length(); k++) {
             JSONObject beaconJson = beaconArray.getJSONObject(k);
             Beacon beacon = new Beacon();
 
@@ -218,12 +202,9 @@ public class AppRepository {
             beacon.setRef(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_REF));
             beacon.setTxpower(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_TXPOWER));
 
-            if(beaconJson.has(Config.NETWORK_JSON_NODE.UPDATED))
-            {
+            if (beaconJson.has(Config.NETWORK_JSON_NODE.UPDATED)) {
                 beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.UPDATED));
-            }
-            else
-            {
+            } else {
                 beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.CREATED));
             }
 
@@ -237,20 +218,17 @@ public class AppRepository {
     }
 
 
-    public void updateBeacon(Application application, Beacon beacon, ISaveBeaconLResultListener resultListener)
-    {
+    public void updateBeacon(Application application, Beacon beacon, ISaveBeaconLResultListener resultListener) {
         ServerRequest request = Helpers.craftBeaconUpdateRequest(application, beacon);
-        request.execute((ServerResponse response)->{
+        request.execute((ServerResponse response) -> {
 
-            if(!response.hasException())
-            {
+            if (!response.hasException()) {
                 String result = response.getJsonBody();
                 try {
 
                     JSONObject resultJSON = new JSONObject(result);
 
-                    if(resultJSON.getBoolean(Config.NETWORK_JSON_NODE.SUCCESS))
-                    {
+                    if (resultJSON.getBoolean(Config.NETWORK_JSON_NODE.SUCCESS)) {
                         JSONObject beaconJson = resultJSON.getJSONObject(Config.NETWORK_JSON_NODE.JUST_BEACON);
                         beacon.setBeaconData(beaconJson.toString());
 
@@ -265,12 +243,9 @@ public class AppRepository {
                         beacon.setRef(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_REF));
                         beacon.setTxpower(beaconJson.getString(Config.NETWORK_JSON_NODE.BEACON_TXPOWER));
 
-                        if(beaconJson.has(Config.NETWORK_JSON_NODE.UPDATED))
-                        {
+                        if (beaconJson.has(Config.NETWORK_JSON_NODE.UPDATED)) {
                             beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.UPDATED));
-                        }
-                        else
-                        {
+                        } else {
                             beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.CREATED));
                         }
 
@@ -286,9 +261,7 @@ public class AppRepository {
                     resultListener.onDone(false);
                     return;
 
-                }
-                catch (JSONException exp)
-                {
+                } catch (JSONException exp) {
                     exp.printStackTrace();
 
 

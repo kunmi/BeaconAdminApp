@@ -5,12 +5,13 @@ public class Config {
 
     public static float ICON_HEIGHT = 100;
     public static float ICON_WIDTH = 100;
+    public static float ICON_HIGHLIGHT_RADIUS = 120;
 
 
     //public static final String SERVER = "http://192.168.0.100:3000/";
-    public static final String SERVER = "http://192.168.0.100:3000/";
+    public static final String SERVER = "http://192.168.0.101:3000/";
 
-//    public static final String SERVER = "http://10.0.2.2:3000/";
+   // public static final String SERVER = "http://10.0.2.2:3000/";
     public static final String SERVER_URL = SERVER+"api/";
 
     public static final String LOGIN_URL = "authenticate";

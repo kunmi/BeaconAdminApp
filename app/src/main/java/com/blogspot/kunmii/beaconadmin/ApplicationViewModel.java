@@ -16,6 +16,8 @@ import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
 import com.blogspot.kunmii.beaconadmin.data.Project;
 import com.kontakt.sdk.android.ble.manager.listeners.EddystoneListener;
 import com.kontakt.sdk.android.ble.manager.listeners.IBeaconListener;
+import com.kontakt.sdk.android.common.profile.IBeaconDevice;
+import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,14 +75,41 @@ public class ApplicationViewModel extends AndroidViewModel{
     }
 
 
+    public LiveData<IEddystoneDevice> getLostEddyBeacon() {
+        if(beaconHelper==null)
+            beaconHelper = getBeaconHelper();
+
+        return beaconHelper.getLostEddyBeacon();
+    }
+
+    public LiveData<IBeaconDevice> getLostIBeacon() {
+        if(beaconHelper==null)
+            beaconHelper = getBeaconHelper();
+        return beaconHelper.getLostIBeacon();
+    }
+
+    public LiveData<List<IBeaconDevice>> getUpdatedIbeacon() {
+        if(beaconHelper==null)
+            beaconHelper = getBeaconHelper();
+        return beaconHelper.getUpdatedIbeacon();
+    }
+
+    public LiveData<List<IEddystoneDevice>> getUpdatedEddystone() {
+        if(beaconHelper==null)
+            beaconHelper = getBeaconHelper();
+        return beaconHelper.getUpdatedEddystone();
+    }
+
     public void saveBeacons(@Nullable ISaveBeaconLResultListener resultListener, List<Beacon> data, String projectId, String flooarplanId)
     {
+
         repository.uploadBeacons(
                 resultListener,
                 data,
                 projectId,
                 flooarplanId
                 );
+
     }
 
 
@@ -108,6 +137,8 @@ public class ApplicationViewModel extends AndroidViewModel{
 
         return beaconHelper;
     }
+
+
 
     public void updateBeacon(Beacon beacon, ISaveBeaconLResultListener resultListener){
         repository.updateBeacon(getApplication(), beacon, resultListener);

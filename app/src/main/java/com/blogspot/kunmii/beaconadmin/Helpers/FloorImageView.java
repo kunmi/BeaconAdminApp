@@ -13,14 +13,20 @@ import com.squareup.picasso.Target;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import java.util.List;
+
+import static com.blogspot.kunmii.beaconadmin.Config.ICON_HIGHLIGHT_RADIUS;
 
 
 public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
     private final Paint paint = new Paint();
+    final Paint circlePaint = new Paint();
+
+
     private final PointF vPin = new PointF();
     private PointF sPin;
 
@@ -68,6 +74,9 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
         eddyPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_eddy), (int)w, (int)h, true);
         unsavedPin = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.beacon_icon_unsaved), (int)w, (int)h, true);
 
+        circlePaint.setStyle(Paint.Style.FILL);
+        circlePaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
     }
 
     @Override
@@ -100,9 +109,14 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
 
                 float vX = vCenter.x - (icon.getWidth()/2);
-                float vY = vCenter.y - icon.getHeight();
+                float vY = vCenter.y;
+
+                if(b.proximity == Beacon.Proximity.IMMEDIATE)
+                    canvas.drawCircle(vCenter.x  ,vCenter.y + ICON_HIGHLIGHT_RADIUS/2, ICON_HIGHLIGHT_RADIUS, circlePaint);
 
                 canvas.drawBitmap(icon, vX, vY, paint);
+
+
             }
 
             if(unsavedBeacons!=null)

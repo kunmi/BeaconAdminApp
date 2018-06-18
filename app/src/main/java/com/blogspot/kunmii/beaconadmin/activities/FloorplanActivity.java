@@ -25,14 +25,21 @@ import android.widget.Toast;
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
 import com.blogspot.kunmii.beaconadmin.Config;
 import com.blogspot.kunmii.beaconadmin.Dialog.DialogBeacon;
+import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.Helpers.FloorImageView;
 import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
 import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
+import com.kontakt.sdk.android.ble.device.EddystoneDevice;
+import com.kontakt.sdk.android.common.Proximity;
+import com.kontakt.sdk.android.common.profile.IBeaconDevice;
+import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
+import com.kontakt.sdk.android.common.profile.RemoteBluetoothDevice;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -90,11 +97,11 @@ public class FloorplanActivity extends AppCompatActivity {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
 
-                if(imageView.isReady()) {
+                if (imageView.isReady()) {
 
                     PointF tappedPoint = new PointF(e.getX(), e.getY());
 
-                    for(Beacon b : beacons) {
+                    for (Beacon b : beacons) {
 
                         PointF beaconCoords = imageView.sourceToViewCoord(b.getCoordsAsPixel(imageView.getImageWidth(), imageView.getImageHeight()));
                         Bitmap pin = imageView.getPin(b);
@@ -102,8 +109,8 @@ public class FloorplanActivity extends AppCompatActivity {
                         Float pictureStartX = beaconCoords.x - (pin.getWidth() / 2);
                         Float pictureEndX = beaconCoords.x + (pin.getWidth() / 2);
 
-                        Float pictureStartY = beaconCoords.y - (pin.getHeight());
-                        Float pictureEndY = beaconCoords.y;
+                        Float pictureStartY = beaconCoords.y;
+                        Float pictureEndY = beaconCoords.y + (pin.getHeight());
 
                         if (tappedPoint.x >= pictureStartX &&
                                 tappedPoint.x <= pictureEndX &&
@@ -111,20 +118,20 @@ public class FloorplanActivity extends AppCompatActivity {
                                 tappedPoint.y <= pictureEndY) {
 
                             DialogBeacon dialogBeacon = new DialogBeacon();
-                            dialogBeacon.setBeacon(b, (beac)->{
-                                if(beac!=null)
-                                   viewModel.updateBeacon(beac, (successful)->{
+                            dialogBeacon.setBeacon(b, (beac) -> {
+                                if (beac != null)
+                                    viewModel.updateBeacon(beac, (successful) -> {
 
-                                       runOnUiThread(new Runnable() {
-                                           @Override
-                                           public void run() {
-                                               if(successful)
-                                                   Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
-                                               else
-                                                   Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
-                                           }
-                                       });
-                                   });
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (successful)
+                                                    Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    });
 
                             });
 
@@ -136,7 +143,7 @@ public class FloorplanActivity extends AppCompatActivity {
                             ft.addToBackStack(null);
 
                             // Create and show the dialog.
-                            dialogBeacon.show(ft,"dialog");
+                            dialogBeacon.show(ft, "dialog");
 
                         }
 
@@ -226,7 +233,7 @@ public class FloorplanActivity extends AppCompatActivity {
 
                         toolbar.setSubtitle(String.valueOf(floorPlan.getName()));
 
-                        if(!imageView.hasImageAlready())
+                        if (!imageView.hasImageAlready())
                             Picasso.get().load(Config.generateImageUrl(floorPlan.getFileurl())).into(imageView);
 
                         //imageView.initialize
@@ -249,6 +256,96 @@ public class FloorplanActivity extends AppCompatActivity {
                 }
 
             }));
+
+            viewModel.getUpdatedIbeacon().observe(this, (List<IBeaconDevice> devices) -> {
+
+                List<Beacon> allBeacons = new ArrayList<>();
+                allBeacons.addAll(beacons);
+                allBeacons.addAll(newBeacons);
+
+                boolean needsUpdate = false;
+
+                for (IBeaconDevice device : devices) {
+                    if (device.getProximityUUID() != null) {
+                            Beacon beacon = retrieveBeacon(device, allBeacons);
+
+                            if(beacon != null)
+                            {
+                                Beacon.Proximity proximity = resolveProximity(device.getProximity());
+                                if (beacon.proximity != proximity) {
+                                    needsUpdate = true;
+                                    beacon.proximity = proximity;
+                                }
+                            }
+
+                    }
+                }
+
+
+                if(needsUpdate)
+                    imageView.invalidate();
+
+            });
+
+            viewModel.getUpdatedEddystone().observe(this, (List<IEddystoneDevice> devices) -> {
+
+
+                List<Beacon> allBeacons = new ArrayList<>();
+                allBeacons.addAll(beacons);
+                allBeacons.addAll(newBeacons);
+
+                boolean needsUpdate = false;
+
+                if(devices!=null) {
+
+                    for (IEddystoneDevice device : devices) {
+                        if (device.getNamespace() != null) {
+
+                                Beacon beacon = retrieveBeacon(device, allBeacons);
+                                if(beacon!=null)
+                                {
+                                    Beacon.Proximity proximity = resolveProximity(device.getProximity());
+                                    if (beacon.proximity != proximity) {
+                                        needsUpdate = true;
+                                        beacon.proximity = proximity;
+                                    }
+
+                                }
+                        }
+
+                    }
+                    if(needsUpdate)
+                        imageView.invalidate();
+                }
+
+            });
+
+            viewModel.getLostIBeacon().observe(this, (IBeaconDevice device) -> {
+
+
+                Beacon b = retrieveBeacon(device,beacons);
+                if(b!=null)
+                {
+                    if (b.proximity != Beacon.Proximity.OUT_OF_RANGE) {
+                        b.proximity = Beacon.Proximity.OUT_OF_RANGE;
+                        imageView.invalidate();
+                    }
+                }
+
+            });
+
+            viewModel.getLostEddyBeacon().observe(this, (IEddystoneDevice device) -> {
+                Beacon b = retrieveBeacon(device,beacons);
+                if(b!=null)
+                {
+                    if (b.proximity != Beacon.Proximity.OUT_OF_RANGE) {
+                        b.proximity = Beacon.Proximity.OUT_OF_RANGE;
+                        imageView.invalidate();
+                    }
+                }
+            });
+
+
         }
     }
 
@@ -271,7 +368,7 @@ public class FloorplanActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 viewModel.saveBeacons(
-                        (boolean success)->{
+                        (boolean success) -> {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -309,16 +406,17 @@ public class FloorplanActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ActivityBeaconList.RC) {
 
-            newBeacon = new Beacon();
 
+            if(data!=null)
             try {
+                newBeacon = new Beacon();
+
                 JSONObject json = new JSONObject(data.getStringExtra(ActivityBeaconList.BEACON_JSON));
                 newBeacon.setTxpower(json.getString(Config.NETWORK_JSON_NODE.BEACON_TXPOWER));
                 newBeacon.setType(json.getString(Config.NETWORK_JSON_NODE.BEACON_TYPE));
@@ -341,7 +439,84 @@ public class FloorplanActivity extends AppCompatActivity {
     }
 
 
-    public void saveBeacons() {
+   Beacon.Proximity resolveProximity(Proximity proximity)
+   {
+        switch (proximity)
+        {
+            case IMMEDIATE:
+                return Beacon.Proximity.IMMEDIATE;
+            case NEAR:
+                return  Beacon.Proximity.NEAR;
+            case FAR:
+                return Beacon.Proximity.FAR;
+        }
+        return Beacon.Proximity.OUT_OF_RANGE;
+   }
 
-    }
+
+   Beacon retrieveBeacon(RemoteBluetoothDevice beaconDevice, List<Beacon> beaconCollections)
+   {
+
+       if(beaconDevice instanceof IBeaconDevice) {
+
+           IBeaconDevice device = (IBeaconDevice) beaconDevice;
+           for(Beacon b : beaconCollections)
+           {
+
+               if(!b.getType().equals("iBeacon"))
+                   continue;
+
+               try {
+                   JSONObject jsonObject = new JSONObject(b.getBeaconData());
+
+                   if (device.getProximityUUID().toString().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_UUID))) {
+
+
+                       if (device.getMajor() == Integer.parseInt(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_MAJOR)))
+                       {
+                           if(device.getMinor() == Integer.parseInt(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_MINOR))){
+                               return b;
+                           }
+
+                       }
+                   }
+
+               } catch (JSONException exp) {
+                   exp.printStackTrace();
+               }
+           }
+
+       }
+       else
+       {
+           IEddystoneDevice device = (IEddystoneDevice) beaconDevice;
+
+           for(Beacon b : beaconCollections) {
+
+               if(b.getType().equals("iBeacon"))
+                   continue;
+
+               try {
+                   JSONObject jsonObject = new JSONObject(b.getBeaconData());
+
+                   if (device.getNamespace().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID))) {
+
+                       if (device.getInstanceId().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID))) {
+
+                           return b;
+
+                       }
+                   }
+
+               } catch (JSONException exp) {
+                   exp.printStackTrace();
+               }
+           }
+
+       }
+
+       return null;
+   }
+
+
 }
