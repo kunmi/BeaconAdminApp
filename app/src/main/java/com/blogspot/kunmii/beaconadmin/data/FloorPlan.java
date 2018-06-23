@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.blogspot.kunmii.beaconadmin.AppDatabase;
 import com.blogspot.kunmii.beaconadmin.Helpers.DateConverter;
@@ -15,10 +16,9 @@ import java.util.List;
 @Entity(tableName = "floorplan")
 public class FloorPlan {
 
-    @PrimaryKey(autoGenerate = true)
-    int id;
-
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name  = "objectid")
+    @NonNull
     String objectId;
 
     @ForeignKey(entity = Project.class, parentColumns = "objectid", childColumns = "projectid")
@@ -35,13 +35,6 @@ public class FloorPlan {
     String updated;
 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getObjectId() {
         return objectId;

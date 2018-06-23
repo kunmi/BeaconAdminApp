@@ -25,9 +25,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,12 +38,23 @@ public class BeaconHelper {
     private BeaconManager beaconManager;
     private ProximityManager proximityManager;
 
-    HashMap<String, IBeaconWrapper> ibeacons = new HashMap<>();
-    HashMap<String, EddystoneWrapper> eddystones = new HashMap<>();
 
 
     MutableLiveData<HashMap<String, IBeaconWrapper>> beaconDeviceLiveData = new MutableLiveData<>();
     MutableLiveData<HashMap<String, EddystoneWrapper>> eddystoneDeviceLiveData = new MutableLiveData<>();
+
+
+    HashMap<String, IBeaconWrapper> ibeacons = new HashMap<>();
+    HashMap<String, EddystoneWrapper> eddystones = new HashMap<>();
+
+    //ForUpdating - LiveMap
+    MutableLiveData<List<IBeaconDevice>> updatedIbeacon = new MutableLiveData<>();
+    MutableLiveData<List<IEddystoneDevice>> updatedEddystone = new MutableLiveData<>();
+
+    //Marked for lost
+    MutableLiveData<IBeaconDevice> lostIBeacon = new MutableLiveData<>();
+    MutableLiveData<IEddystoneDevice> lostEddyBeacon = new MutableLiveData<>();
+
 
     public BeaconHelper(Application context) {
 
@@ -92,7 +105,8 @@ public class BeaconHelper {
 
             @Override
             public void onIBeaconsUpdated(List<IBeaconDevice> ibeacons, IBeaconRegion region) {
-
+                Log.d("","");
+                updatedIbeacon.setValue(ibeacons);
             }
 
             @Override
@@ -108,7 +122,7 @@ public class BeaconHelper {
                     beaconDeviceLiveData.setValue(ibeacons);
                 }
 
-
+                lostIBeacon.setValue(ibeacon);
             }
         };
     }
@@ -128,6 +142,8 @@ public class BeaconHelper {
             @Override
             public void onEddystonesUpdated(List<IEddystoneDevice> eddystones, IEddystoneNamespace namespace) {
                 super.onEddystonesUpdated(eddystones, namespace);
+
+                updatedEddystone.setValue(eddystones);
             }
 
             @Override
@@ -141,6 +157,8 @@ public class BeaconHelper {
                     eddystones.remove(key);
                     eddystoneDeviceLiveData.setValue(eddystones);
                 }
+
+                lostEddyBeacon.setValue(eddystone);
             }
         };
     }
@@ -154,13 +172,26 @@ public class BeaconHelper {
         return eddystoneDeviceLiveData;
     }
 
+    public MutableLiveData<IEddystoneDevice> getLostEddyBeacon() {
+        return lostEddyBeacon;
+    }
+
+    public MutableLiveData<IBeaconDevice> getLostIBeacon() {
+        return lostIBeacon;
+    }
+
+    public MutableLiveData<List<IBeaconDevice>> getUpdatedIbeacon() {
+        return updatedIbeacon;
+    }
+
+    public MutableLiveData<List<IEddystoneDevice>> getUpdatedEddystone() {
+        return updatedEddystone;
+    }
+
+    public interface BeaconWrapper{}
 
 
-
-
-
-
-    public class IBeaconWrapper{
+    public class IBeaconWrapper implements BeaconWrapper{
 
         public IBeaconRegion region;
         public IBeaconDevice device;
@@ -173,7 +204,7 @@ public class BeaconHelper {
 
     }
 
-    public class EddystoneWrapper{
+    public class EddystoneWrapper implements BeaconWrapper{
 
         public IEddystoneNamespace namespace;
         public IEddystoneDevice device;

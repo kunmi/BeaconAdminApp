@@ -10,8 +10,10 @@ import android.support.constraint.solver.widgets.Helper;
 import android.support.v7.app.AlertDialog;
 
 import com.blogspot.kunmii.beaconadmin.Config;
+import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.network.ServerRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 public class Helpers {
@@ -52,6 +55,12 @@ public class Helpers {
     }
 
 
+    public static void clearALlData(Application application)
+    {
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+        defaultSharedPreferences.edit().clear().apply();
+    }
+
     public static boolean StoreUserData(JSONObject userData, Application context)
     {
         try {
@@ -82,9 +91,73 @@ public class Helpers {
     public static ServerRequest craftProjectRetrieveRequest(Application application)
     {
         String token = Helpers.getUserToken(application);
-        ServerRequest request = new ServerRequest(application, Config.getGetProjectUrl());
+        ServerRequest request = new ServerRequest(application, Config.PROJECT_URL);
         request.putHeader("Authorization", token);
         request.putHeader("Content-Type", "application/json");
+        return request;
+    }
+
+    public static ServerRequest craftUploadRequest(Application application, List<Beacon> beacons, String projectId, String floorplanId)
+    {
+        String token = Helpers.getUserToken(application);
+        ServerRequest request = new ServerRequest(application, Config.UPLOAD_URL + "/" + projectId + "/" + floorplanId);
+        request.putHeader("Authorization", token);
+        request.putHeader("Content-Type", "application/json");
+
+        JSONArray array = new JSONArray();
+
+        try {
+            for(Beacon b: beacons)
+            {
+                JSONObject jsonObject = new JSONObject(b.getBeaconData());
+                array.put(jsonObject);
+            }
+
+        }
+        catch (JSONException exp)
+        {
+            exp.printStackTrace();
+
+        }
+        request.setBody(array.toString());
+
+        return request;
+    }
+
+    public static ServerRequest craftBeaconUpdateRequest(Application application, Beacon beacon)
+    {
+        String token = Helpers.getUserToken(application);
+
+        ServerRequest request = new ServerRequest(application, Config.BEACON_UPDATE_URL + "/" +
+                beacon.getProjectId() + "/" +
+                beacon.getFloorPlanId() + "/" +
+                beacon.getObjectId());
+
+        request.putHeader("Authorization", token);
+        request.putHeader("Content-Type", "application/json");
+
+        request.setBody(beacon.getBeaconData());
+
+        return request;
+    }
+
+    public static ServerRequest craftSendMessageRequest(Application application, String project, String floorplan,String data)
+    {
+
+        String token = Helpers.getUserToken(application);
+
+        ServerRequest request = new ServerRequest(application, Config.SEND_MESSAGE_URL + "/" +
+
+                project + "/" +
+                floorplan
+        );
+
+
+        request.putHeader("Authorization", token);
+        request.putHeader("Content-Type", "application/json");
+
+        request.setBody(data);
+
         return request;
     }
 

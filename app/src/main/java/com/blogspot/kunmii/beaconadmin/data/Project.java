@@ -4,19 +4,22 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.blogspot.kunmii.beaconadmin.Helpers.DateConverter;
 
 import java.util.Date;
 
+
 @Entity(tableName = "projects")
 public class Project {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
 
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "objectid")
+    @NonNull
     private String objectId;
+
 
     @ColumnInfo(name = "name")
     private String name;
@@ -30,13 +33,7 @@ public class Project {
     @ColumnInfo(name = "updated")
     String updated;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getObjectId() {
         return objectId;

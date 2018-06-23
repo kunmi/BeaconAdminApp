@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="@dimen/dialog_width"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="5dp">
+
+
+    <TextView
+        style="@style/beacon_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eddystone"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            style="@style/beacon_text_style"
+            android:layout_alignParentLeft="true"
+            android:text="Namespace: " />
+
+
+        <TextView
+            android:id="@+id/namespace_text_view"
+            style="@style/beacon_header"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:text="" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            style="@style/beacon_text_style"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Instance-ID: " />
+
+        <TextView
+            android:id="@+id/instanceid_text_view"
+            style="@style/beacon_header"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:text="" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            style="@style/beacon_text_style"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Frametype: " />
+
+        <TextView
+            android:id="@+id/frametype_text_view"
+            style="@style/beacon_header"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:text="UID" />
+
+    </RelativeLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:text="Reference Id" />
+
+        <EditText
+            android:id="@+id/ref_number"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="reference number"
+            android:text=""
+             />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:text="TX-Power" />
+
+        <TextView
+            android:id="@+id/txpower_text_view"
+            style="@style/beacon_text_style"
+            android:layout_width="wrap_content"
+            android:text="X" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/beacon_header"
+            android:layout_width="wrap_content"
+            android:text="Telemetry" />
+
+        <TextView
+            android:id="@+id/telemetry_text_view"
+            style="@style/beacon_text_style"
+            android:layout_width="wrap_content"
+            android:text="X" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

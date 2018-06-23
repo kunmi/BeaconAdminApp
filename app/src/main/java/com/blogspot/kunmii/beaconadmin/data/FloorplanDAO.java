@@ -36,6 +36,8 @@ public interface FloorplanDAO {
     void delete(FloorPlan user);
 
 
+    @Query("DELETE FROM  floorplan")
+    void nukeAll();
 
 
 }

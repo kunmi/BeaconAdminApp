@@ -28,4 +28,7 @@ public interface ProjectDAO {
     @Delete
     void delete(Project project);
 
+    @Query("DELETE FROM projects")
+    void nukeAll();
+
 }

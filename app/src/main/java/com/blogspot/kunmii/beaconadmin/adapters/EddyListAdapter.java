@@ -46,6 +46,8 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
         IEddystoneDevice beacon = beaconWrapper.device;
 
         holder.namespace.setText(region.getIdentifier());
+
+        holder.eddyNameSpace.setText(beacon.getNamespace());
         holder.instanceId.setText(beacon.getInstanceId());
         holder.proximity.setText(beacon.getProximity().toString());
         holder.telemetry.setText(beacon.getTelemetry()!=null?"YES": "NO");
@@ -84,6 +86,8 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
     public class EddyViewHolder extends RecyclerView.ViewHolder{
 
         TextView namespace;
+
+        TextView eddyNameSpace;
         TextView instanceId;
         TextView proximity;
         TextView telemetry;
@@ -96,6 +100,8 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
 
             v = itemView;
             namespace = itemView.findViewById(R.id.namespace_text_view);
+
+            eddyNameSpace = itemView.findViewById(R.id.namespace_text_view_main);
             instanceId = itemView.findViewById(R.id.instanceid_text_view);
             proximity = itemView.findViewById(R.id.proximity_text_view);
             telemetry = itemView.findViewById(R.id.has_telemetry);

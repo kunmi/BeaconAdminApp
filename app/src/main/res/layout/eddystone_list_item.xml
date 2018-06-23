@@ -38,9 +38,24 @@
 
         <View style="@style/divider" />
 
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView style="@style/beacon_header"
+                android:text="Namespace: "/>
+
+            <TextView
+                android:id="@+id/namespace_text_view_main" style="@style/beacon_text_style"
+                android:text=""
+                android:layout_marginLeft="5dp"
+                />
+
+        </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
