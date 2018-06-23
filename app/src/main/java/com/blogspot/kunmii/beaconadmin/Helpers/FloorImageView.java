@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.blogspot.kunmii.beaconadmin.Config.ICON_HIGHLIGHT_RADIUS;
@@ -25,6 +26,7 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
     private final Paint paint = new Paint();
     final Paint circlePaint = new Paint();
+    final Paint cursorPaint = new Paint();
 
 
     private final PointF vPin = new PointF();
@@ -42,6 +44,10 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
     List<Beacon> unsavedBeacons = null;
 
     boolean dropPinMode = false;
+
+
+    boolean selectMode = true;
+    HashMap<String, Beacon> selectedBeacons = new HashMap<>();
 
     public FloorImageView(Context context) {
         this(context, null);
@@ -76,6 +82,10 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
+        cursorPaint.setStyle(Paint.Style.STROKE);
+        cursorPaint.setStrokeWidth(12);
+        cursorPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
 
     }
 
@@ -116,6 +126,18 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
 
                 canvas.drawBitmap(icon, vX, vY, paint);
 
+                if(selectMode)
+                {
+                    if(b.getObjectId() !=null){
+                        if(selectedBeacons.containsKey(b.getObjectId()))
+                        {
+                            float left = vCenter.x - Config.CURSOR_SIZE/2;
+                            float top = vCenter.y ;
+
+                            canvas.drawRect(left, top, left + Config.CURSOR_SIZE, top + Config.CURSOR_SIZE, cursorPaint);
+                        }
+                    }
+                }
 
             }
 
@@ -179,4 +201,34 @@ public class FloorImageView extends SubsamplingScaleImageView implements Target{
         else
             return eddyPin;
     }
+
+
+    public HashMap<String, Beacon> getSelectedBeacons() {
+        return selectedBeacons;
+    }
+
+    public void select(Beacon beacon)
+    {
+        if(beacon.getObjectId()!=null)
+            selectedBeacons.put(beacon.getObjectId(), beacon);
+
+        invalidate();
+    }
+
+    public void setSelectable()
+    {
+        selectMode = true;
+        selectedBeacons.clear();
+        invalidate();
+    }
+
+    public void finishSelection(){
+        selectMode = true;
+        selectedBeacons.clear();
+        invalidate();
+    }
+
+
+
+
 }

@@ -141,6 +141,26 @@ public class Helpers {
         return request;
     }
 
+    public static ServerRequest craftSendMessageRequest(Application application, String project, String floorplan,String data)
+    {
+
+        String token = Helpers.getUserToken(application);
+
+        ServerRequest request = new ServerRequest(application, Config.SEND_MESSAGE_URL + "/" +
+
+                project + "/" +
+                floorplan
+        );
+
+
+        request.putHeader("Authorization", token);
+        request.putHeader("Content-Type", "application/json");
+
+        request.setBody(data);
+
+        return request;
+    }
+
     public static JSONObject createIBeaconJSON (Application application){
         JSONObject jsonObject = null;
 

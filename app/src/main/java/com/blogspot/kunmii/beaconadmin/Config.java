@@ -6,12 +6,13 @@ public class Config {
     public static float ICON_HEIGHT = 100;
     public static float ICON_WIDTH = 100;
     public static float ICON_HIGHLIGHT_RADIUS = 120;
+    public static float CURSOR_SIZE = 140;
 
 
     //public static final String SERVER = "http://192.168.0.100:3000/";
-    public static final String SERVER = "http://192.168.0.101:3000/";
+    //public static final String SERVER = "http://192.168.0.104:3000/";
 
-   // public static final String SERVER = "http://10.0.2.2:3000/";
+    public static final String SERVER = "http://10.0.2.2:3000/";
     public static final String SERVER_URL = SERVER+"api/";
 
     public static final String LOGIN_URL = "authenticate";
@@ -19,7 +20,7 @@ public class Config {
     public static final String UPLOAD_URL = "upload";
 
     public static final String BEACON_UPDATE_URL = "update/beacon";
-
+    public static final String SEND_MESSAGE_URL = "sendmessage";
 
 
 
@@ -71,6 +72,13 @@ public class Config {
         String EDDY_NAMESPACEID = "nameSpaceId";
         String EDDY_INSTANCEID = "instanceId";
         String EDDY_TELEMETRY = "telemetry";
+
+
+        String MESSAGE_PROJECT_ID = "project";
+        String MESSAGE_FLOORPLAN_ID = "floorplan";
+        String MESSAGE_TITLE = "title";
+        String MESSAGE_BODY = "body";
+        String MESSAGE_BEACONS = "beacons";
 
 
 

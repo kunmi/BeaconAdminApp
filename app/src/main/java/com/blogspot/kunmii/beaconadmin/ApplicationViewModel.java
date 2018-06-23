@@ -139,6 +139,11 @@ public class ApplicationViewModel extends AndroidViewModel{
     }
 
 
+    public void sensMessage(String title, String body, List<Beacon> beacons, String projectId, String floorplanId, ISaveBeaconLResultListener listener){
+
+        repository.sendMessage(title,body, projectId, floorplanId, beacons,listener);
+    }
+
 
     public void updateBeacon(Beacon beacon, ISaveBeaconLResultListener resultListener){
         repository.updateBeacon(getApplication(), beacon, resultListener);

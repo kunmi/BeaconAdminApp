@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -269,9 +271,64 @@ public class AppRepository {
             }
             resultListener.onDone(false);
             return;
-
-
         });
+
     }
+    public void sendMessage(String title, String body, String projectId, String floorplanId,List<Beacon> beacons, ISaveBeaconLResultListener resultListner){
+
+        try {
+            JSONObject object = new JSONObject();
+
+            object.put(Config.NETWORK_JSON_NODE.MESSAGE_PROJECT_ID, projectId);
+            object.put(Config.NETWORK_JSON_NODE.MESSAGE_FLOORPLAN_ID, floorplanId);
+
+            object.put(Config.NETWORK_JSON_NODE.MESSAGE_TITLE, title);
+            object.put(Config.NETWORK_JSON_NODE.MESSAGE_BODY, body);
+
+
+            JSONArray beacArray = new JSONArray();
+            for(Beacon b : beacons)
+            {
+                beacArray.put(b.getObjectId());
+            }
+
+            object.put(Config.NETWORK_JSON_NODE.MESSAGE_BEACONS, beacArray);
+
+            ServerRequest request = Helpers.craftSendMessageRequest(mContext, projectId, floorplanId, object.toString());
+
+            request.execute(new IServerRequestListener() {
+                @Override
+                public void onResponse(ServerResponse response) {
+                    try{
+                        if(!response.hasException())
+                        {
+                            JSONObject jsonObject = new JSONObject(response.getJsonBody());
+
+                            if(jsonObject.getBoolean(Config.NETWORK_JSON_NODE.SUCCESS))
+                                resultListner.onDone(true);
+
+                            return;
+                        }
+
+                        resultListner.onDone(false);
+                    }
+                    catch (Exception exp)
+                    {
+                        exp.printStackTrace();
+                        resultListner.onDone(false);
+                    }
+                }
+            });
+
+
+        }
+        catch (JSONException exp)
+        {
+            exp.printStackTrace();
+            resultListner.onDone(false);
+        }
+
+    }
+
 
 }

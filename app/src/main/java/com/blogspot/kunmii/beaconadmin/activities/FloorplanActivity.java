@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.blogspot.kunmii.beaconadmin.ApplicationViewModel;
 import com.blogspot.kunmii.beaconadmin.Config;
 import com.blogspot.kunmii.beaconadmin.Dialog.DialogBeacon;
+import com.blogspot.kunmii.beaconadmin.Dialog.DialogSendMessage;
 import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.Helpers.FloorImageView;
 import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
@@ -43,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FloorplanActivity extends AppCompatActivity {
@@ -67,6 +69,10 @@ public class FloorplanActivity extends AppCompatActivity {
     Beacon newBeacon = null;
 
     ProgressBar progressBar = null;
+
+    boolean selectingForMessage = false;
+    HashMap<String, Beacon> selectedForMessage = new HashMap<>();
+
 
 
     @Override
@@ -117,33 +123,15 @@ public class FloorplanActivity extends AppCompatActivity {
                                 tappedPoint.y >= pictureStartY &&
                                 tappedPoint.y <= pictureEndY) {
 
-                            DialogBeacon dialogBeacon = new DialogBeacon();
-                            dialogBeacon.setBeacon(b, (beac) -> {
-                                if (beac != null)
-                                    viewModel.updateBeacon(beac, (successful) -> {
-
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (successful)
-                                                    Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
-                                                else
-                                                    Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    });
-
-                            });
-
-                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                            Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-                            if (prev != null) {
-                                ft.remove(prev);
+                            if(!selectingForMessage) {
+                                showBeaconDetailDialog(b);
                             }
-                            ft.addToBackStack(null);
+                            else
+                            {
+                                imageView.select(b);
+                            }
 
-                            // Create and show the dialog.
-                            dialogBeacon.show(ft, "dialog");
+                            break;
 
                         }
 
@@ -379,7 +367,29 @@ public class FloorplanActivity extends AppCompatActivity {
                         newBeacons,
                         projectId,
                         floorplanId);
+                break;
+            case R.id.sendMessage:
+                selectingForMessage = true;
+                imageView.setSelectable();
+                invalidateOptionsMenu();
+                break;
 
+            case R.id.cancel:
+
+                selectingForMessage = false;
+                imageView.finishSelection();
+                invalidateOptionsMenu();
+
+                break;
+            case R.id.done:
+
+                List<Beacon> selectedBeacons = new ArrayList<>(imageView.getSelectedBeacons().values());
+                showSendMessageDialog(selectedBeacons);
+                imageView.finishSelection();
+                selectingForMessage = false;
+                invalidateOptionsMenu();
+
+                break;
 
         }
 
@@ -389,10 +399,29 @@ public class FloorplanActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (newBeacons.size() > 0)
-            menu.findItem(R.id.savebeacons).setVisible(true);
+        if(!selectingForMessage) {
+            menu.findItem(R.id.addbeacon).setVisible(true);
+
+            menu.findItem(R.id.done).setVisible(false);
+            menu.findItem(R.id.cancel).setVisible(false);
+
+            if (newBeacons.size() > 0) {
+                menu.findItem(R.id.savebeacons).setVisible(true);
+                menu.findItem(R.id.sendMessage).setVisible(false);
+            } else {
+                menu.findItem(R.id.savebeacons).setVisible(false);
+                menu.findItem(R.id.sendMessage).setVisible(true);
+            }
+        }
         else
+        {
             menu.findItem(R.id.savebeacons).setVisible(false);
+            menu.findItem(R.id.addbeacon).setVisible(false);
+            menu.findItem(R.id.sendMessage).setVisible(false);
+
+            menu.findItem(R.id.done).setVisible(true);
+            menu.findItem(R.id.cancel).setVisible(true);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -516,6 +545,88 @@ public class FloorplanActivity extends AppCompatActivity {
        }
 
        return null;
+   }
+
+   void showBeaconDetailDialog(Beacon b)
+   {
+
+       DialogBeacon dialogBeacon = new DialogBeacon();
+       dialogBeacon.setBeacon(b, (beac) -> {
+           if (beac != null)
+               viewModel.updateBeacon(beac, (successful) -> {
+
+                   runOnUiThread(new Runnable() {
+                       @Override
+                       public void run() {
+                           if (successful)
+                               Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
+                           else
+                               Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
+                       }
+                   });
+               });
+
+       });
+
+       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+       Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+       if (prev != null) {
+           ft.remove(prev);
+       }
+       ft.addToBackStack(null);
+
+       // Create and show the dialog.
+       dialogBeacon.show(ft, "dialog");
+   }
+
+
+   void showSendMessageDialog(List<Beacon> selectedBeacons)
+   {
+       if(selectedBeacons.size()>0) {
+           DialogSendMessage dialogBeacon = new DialogSendMessage();
+
+           dialogBeacon.setData(new DialogSendMessage.DialogResultListener() {
+               @Override
+               public void dialogResult(List<Beacon> beacons, String title, String body) {
+
+
+                   runOnUiThread(()->{
+                       Toast.makeText(FloorplanActivity.this, "Sending Message", Toast.LENGTH_SHORT).show();
+                   });
+
+                   viewModel.sensMessage(title, body, beacons ,projectId, floorplanId, (result)->{
+
+                       runOnUiThread(()->{
+                           if(result){
+                               Toast.makeText(FloorplanActivity.this, "Sent successfully", Toast.LENGTH_SHORT).show();
+                           }
+                           else
+                           {
+                               Toast.makeText(FloorplanActivity.this, "Sending Failed :(", Toast.LENGTH_SHORT).show();
+                           }
+
+                       });
+
+
+                   });
+
+               }
+           }, selectedBeacons);
+
+           FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+           Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+           if (prev != null) {
+               ft.remove(prev);
+           }
+           ft.addToBackStack(null);
+
+           // Create and show the dialog.
+           dialogBeacon.show(ft, "dialog");
+       }
+       else
+       {
+           Helpers.showDialog(this, "No Beacon selected", "Okay");
+       }
    }
 
 
