@@ -62,7 +62,7 @@ public class FloorplanActivity extends AppCompatActivity {
 
     FloorPlan floorPlan = null;
 
-    List<Beacon> beacons = null;
+    List<Beacon> beacons = new ArrayList<>();
     List<Beacon> newBeacons = new ArrayList<>();
 
     FloorImageView imageView;
@@ -80,6 +80,7 @@ public class FloorplanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_floorplan);
 
+
         layout = findViewById(R.id.appbar_layout);
         toolbar = findViewById(R.id.toolbar);
 
@@ -94,6 +95,7 @@ public class FloorplanActivity extends AppCompatActivity {
 
         floorplanId = getIntent().getStringExtra(FLOORPLAN_ID);
         projectId = getIntent().getStringExtra(PROJECT_ID);
+
 
         imageView = (FloorImageView) findViewById(R.id.floorplan_view);
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
@@ -253,16 +255,16 @@ public class FloorplanActivity extends AppCompatActivity {
 
                 for (IBeaconDevice device : devices) {
                     if (device.getProximityUUID() != null) {
-                            Beacon beacon = retrieveBeacon(device, allBeacons);
+                        Beacon beacon = retrieveBeacon(device, allBeacons);
 
-                            if(beacon != null)
-                            {
-                                Beacon.Proximity proximity = resolveProximity(device.getProximity());
-                                if (beacon.proximity != proximity) {
-                                    needsUpdate = true;
-                                    beacon.proximity = proximity;
-                                }
+                        if(beacon != null)
+                        {
+                            Beacon.Proximity proximity = resolveProximity(device.getProximity());
+                            if (beacon.proximity != proximity) {
+                                needsUpdate = true;
+                                beacon.proximity = proximity;
                             }
+                        }
 
                     }
                 }
@@ -287,16 +289,16 @@ public class FloorplanActivity extends AppCompatActivity {
                     for (IEddystoneDevice device : devices) {
                         if (device.getNamespace() != null) {
 
-                                Beacon beacon = retrieveBeacon(device, allBeacons);
-                                if(beacon!=null)
-                                {
-                                    Beacon.Proximity proximity = resolveProximity(device.getProximity());
-                                    if (beacon.proximity != proximity) {
-                                        needsUpdate = true;
-                                        beacon.proximity = proximity;
-                                    }
-
+                            Beacon beacon = retrieveBeacon(device, allBeacons);
+                            if(beacon!=null)
+                            {
+                                Beacon.Proximity proximity = resolveProximity(device.getProximity());
+                                if (beacon.proximity != proximity) {
+                                    needsUpdate = true;
+                                    beacon.proximity = proximity;
                                 }
+
+                            }
                         }
 
                     }
@@ -433,6 +435,21 @@ public class FloorplanActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.stopBeaconScan();
+        viewModel.destroyBeaconManager();
+        viewModel = null;
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -441,33 +458,33 @@ public class FloorplanActivity extends AppCompatActivity {
 
 
             if(data!=null)
-            try {
-                newBeacon = new Beacon();
+                try {
+                    newBeacon = new Beacon();
 
-                JSONObject json = new JSONObject(data.getStringExtra(ActivityBeaconList.BEACON_JSON));
-                newBeacon.setTxpower(json.getString(Config.NETWORK_JSON_NODE.BEACON_TXPOWER));
-                newBeacon.setType(json.getString(Config.NETWORK_JSON_NODE.BEACON_TYPE));
-                newBeacon.setBeaconData(json.toString());
+                    JSONObject json = new JSONObject(data.getStringExtra(ActivityBeaconList.BEACON_JSON));
+                    newBeacon.setTxpower(json.getString(Config.NETWORK_JSON_NODE.BEACON_TXPOWER));
+                    newBeacon.setType(json.getString(Config.NETWORK_JSON_NODE.BEACON_TYPE));
+                    newBeacon.setBeaconData(json.toString());
 
-                Toast.makeText(this, "Long press on location to place on the map", Toast.LENGTH_SHORT).show();
-                imageView.setDropPinMode(true);
+                    Toast.makeText(this, "Long press on location to place on the map", Toast.LENGTH_SHORT).show();
+                    imageView.setDropPinMode(true);
 
 
-            } catch (Exception exp) {
-                exp.printStackTrace();
-                Helpers.showDialog(this, "Error", exp.getMessage(), "Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                } catch (Exception exp) {
+                    exp.printStackTrace();
+                    Helpers.showDialog(this, "Error", exp.getMessage(), "Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-            }
+                        }
+                    });
+                }
         }
     }
 
 
-   Beacon.Proximity resolveProximity(Proximity proximity)
-   {
+    Beacon.Proximity resolveProximity(Proximity proximity)
+    {
         switch (proximity)
         {
             case IMMEDIATE:
@@ -478,153 +495,154 @@ public class FloorplanActivity extends AppCompatActivity {
                 return Beacon.Proximity.FAR;
         }
         return Beacon.Proximity.OUT_OF_RANGE;
-   }
+    }
 
 
-   Beacon retrieveBeacon(RemoteBluetoothDevice beaconDevice, List<Beacon> beaconCollections)
-   {
+    Beacon retrieveBeacon(RemoteBluetoothDevice beaconDevice, List<Beacon> beaconCollections)
+    {
 
-       if(beaconDevice instanceof IBeaconDevice) {
+        if(beaconDevice instanceof IBeaconDevice) {
 
-           IBeaconDevice device = (IBeaconDevice) beaconDevice;
-           for(Beacon b : beaconCollections)
-           {
+            IBeaconDevice device = (IBeaconDevice) beaconDevice;
+            for(Beacon b : beaconCollections)
+            {
 
-               if(!b.getType().equals("iBeacon"))
-                   continue;
+                if(!b.getType().equals("iBeacon"))
+                    continue;
 
-               try {
-                   JSONObject jsonObject = new JSONObject(b.getBeaconData());
+                try {
+                    JSONObject jsonObject = new JSONObject(b.getBeaconData());
 
-                   if (device.getProximityUUID().toString().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_UUID))) {
-
-
-                       if (device.getMajor() == Integer.parseInt(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_MAJOR)))
-                       {
-                           if(device.getMinor() == Integer.parseInt(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_MINOR))){
-                               return b;
-                           }
-
-                       }
-                   }
-
-               } catch (JSONException exp) {
-                   exp.printStackTrace();
-               }
-           }
-
-       }
-       else
-       {
-           IEddystoneDevice device = (IEddystoneDevice) beaconDevice;
-
-           for(Beacon b : beaconCollections) {
-
-               if(b.getType().equals("iBeacon"))
-                   continue;
-
-               try {
-                   JSONObject jsonObject = new JSONObject(b.getBeaconData());
-
-                   if (device.getNamespace().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID))) {
-
-                       if (device.getInstanceId().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID))) {
-
-                           return b;
-
-                       }
-                   }
-
-               } catch (JSONException exp) {
-                   exp.printStackTrace();
-               }
-           }
-
-       }
-
-       return null;
-   }
-
-   void showBeaconDetailDialog(Beacon b)
-   {
-
-       DialogBeacon dialogBeacon = new DialogBeacon();
-       dialogBeacon.setBeacon(b, (beac) -> {
-           if (beac != null)
-               viewModel.updateBeacon(beac, (successful) -> {
-
-                   runOnUiThread(new Runnable() {
-                       @Override
-                       public void run() {
-                           if (successful)
-                               Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
-                           else
-                               Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
-                       }
-                   });
-               });
-
-       });
-
-       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-       Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-       if (prev != null) {
-           ft.remove(prev);
-       }
-       ft.addToBackStack(null);
-
-       // Create and show the dialog.
-       dialogBeacon.show(ft, "dialog");
-   }
+                    if (device.getProximityUUID().toString().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_UUID))) {
 
 
-   void showSendMessageDialog(List<Beacon> selectedBeacons)
-   {
-       if(selectedBeacons.size()>0) {
-           DialogSendMessage dialogBeacon = new DialogSendMessage();
+                        if (device.getMajor() == Integer.parseInt(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_MAJOR)))
+                        {
+                            if(device.getMinor() == Integer.parseInt(jsonObject.getString(Config.NETWORK_JSON_NODE.IBEACON_MINOR))){
+                                return b;
+                            }
 
-           dialogBeacon.setData(new DialogSendMessage.DialogResultListener() {
-               @Override
-               public void dialogResult(List<Beacon> beacons, String title, String body) {
+                        }
+                    }
+
+                } catch (JSONException exp) {
+                    exp.printStackTrace();
+                }
+            }
+
+        }
+        else
+        {
+            IEddystoneDevice device = (IEddystoneDevice) beaconDevice;
+
+            for(Beacon b : beaconCollections) {
+
+                if(b.getType().equals("iBeacon"))
+                    continue;
+
+                try {
+                    JSONObject jsonObject = new JSONObject(b.getBeaconData());
+
+                    if (device.getNamespace().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID))) {
+
+                        if (device.getInstanceId().equals(jsonObject.getString(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID))) {
+
+                            return b;
+
+                        }
+                    }
+
+                } catch (JSONException exp) {
+                    exp.printStackTrace();
+                }
+            }
+
+        }
+
+        return null;
+    }
+
+    void showBeaconDetailDialog(Beacon b)
+    {
+
+        DialogBeacon dialogBeacon = new DialogBeacon();
+        dialogBeacon.setBeacon(b, (beac) -> {
+            if (beac != null)
+                viewModel.updateBeacon(beac, (successful) -> {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (successful)
+                                Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+
+        });
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        dialogBeacon.show(ft, "dialog");
+    }
 
 
-                   runOnUiThread(()->{
-                       Toast.makeText(FloorplanActivity.this, "Sending Message", Toast.LENGTH_SHORT).show();
-                   });
+    void showSendMessageDialog(List<Beacon> selectedBeacons)
+    {
+        if(selectedBeacons.size()>0) {
+            DialogSendMessage dialogBeacon = new DialogSendMessage();
 
-                   viewModel.sensMessage(title, body, beacons ,projectId, floorplanId, (result)->{
-
-                       runOnUiThread(()->{
-                           if(result){
-                               Toast.makeText(FloorplanActivity.this, "Sent successfully", Toast.LENGTH_SHORT).show();
-                           }
-                           else
-                           {
-                               Toast.makeText(FloorplanActivity.this, "Sending Failed :(", Toast.LENGTH_SHORT).show();
-                           }
-                       });
+            dialogBeacon.setData(new DialogSendMessage.DialogResultListener() {
+                @Override
+                public void dialogResult(List<Beacon> beacons, String title, String body) {
 
 
-                   });
+                    runOnUiThread(()->{
+                        Toast.makeText(FloorplanActivity.this, "Sending Message", Toast.LENGTH_SHORT).show();
+                    });
 
-               }
-           }, selectedBeacons);
+                    viewModel.sensMessage(title, body, beacons ,projectId, floorplanId, (result)->{
 
-           FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-           Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-           if (prev != null) {
-               ft.remove(prev);
-           }
-           ft.addToBackStack(null);
+                        runOnUiThread(()->{
+                            if(result){
+                                Toast.makeText(FloorplanActivity.this, "Sent successfully", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(FloorplanActivity.this, "Sending Failed :(", Toast.LENGTH_SHORT).show();
+                            }
 
-           // Create and show the dialog.
-           dialogBeacon.show(ft, "dialog");
-       }
-       else
-       {
-           Helpers.showDialog(this, "No Beacon selected", "Okay");
-       }
-   }
+                        });
+
+
+                    });
+
+                }
+            }, selectedBeacons);
+
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            dialogBeacon.show(ft, "dialog");
+        }
+        else
+        {
+            Helpers.showDialog(this, "No Beacon selected", "Okay");
+        }
+    }
 
 
 }

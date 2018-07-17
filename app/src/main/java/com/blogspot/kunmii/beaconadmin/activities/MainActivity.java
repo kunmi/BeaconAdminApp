@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,25 +28,20 @@ import com.blogspot.kunmii.beaconadmin.Helpers.Helpers;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.adapters.ProjectAdapter;
 import com.blogspot.kunmii.beaconadmin.data.Project;
+import com.blogspot.kunmii.beaconadmin.fragments.ProjectListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    AppBarLayout layout;
-    Toolbar toolbar;
-
-
-    private ApplicationViewModel viewModel;
-    private ProjectAdapter recyclerViewAdapter;
-    private RecyclerView recyclerView;
+   AppBarLayout layout;
+   public Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         layout = findViewById(R.id.appbar_layout);
         toolbar = findViewById(R.id.toolbar);
@@ -52,21 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar.setSubtitle("Projects");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerViewAdapter = new ProjectAdapter(new ArrayList<Project>(), new ProjectClickListener() {
-            @Override
-            public void onClick(Project project) {
-                Intent i = new Intent(MainActivity.this, FloorPlanListActivity.class);
-                i.putExtra(FloorPlanListActivity.PROJECT_ID_KEY, project.getObjectId());
-                startActivity(i);
-            }
-        });
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        recyclerView.setAdapter(recyclerViewAdapter);
-
         checkPermissionAndStart();
 
+        switchFragment(new ProjectListFragment(), false);
     }
 
 
@@ -78,33 +64,32 @@ public class MainActivity extends AppCompatActivity {
         {
             startActivityForResult(new Intent(this, LoginActivity.class),1);
         }
+    }
+
+
+    public void switchFragment(Fragment f, boolean addToBackStack){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+
+
+        if(addToBackStack){
+            transaction.add(R.id.fragmentLayout, f);
+            transaction.addToBackStack(f.getClass().getName());
+        }
         else
         {
-            if(viewModel == null) {
-                viewModel = ViewModelProviders.of(this).get(ApplicationViewModel.class);
-
-                viewModel.getAllAsignedProjects().observe(MainActivity.this, new Observer<List<Project>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Project> projects) {
-                        recyclerViewAdapter.addItems(projects);
-                    }
-                });
-            }
+            transaction.add(R.id.fragmentLayout, f);
         }
 
 
-
+        transaction.commit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+    public void popBackStack()
+    {
+        FragmentManager fm = getSupportFragmentManager();
 
-    public interface ProjectClickListener{
-        public void onClick(Project project);
+        fm.popBackStack();
     }
 
     private void checkPermissionAndStart() {
@@ -137,16 +122,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.logout:
-                viewModel.LogOut();
-                viewModel=null;
-                startActivityForResult(new Intent(this, LoginActivity.class),1);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
+
+
 }

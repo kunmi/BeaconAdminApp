@@ -10,11 +10,9 @@ import android.widget.TextView;
 
 import com.blogspot.kunmii.beaconadmin.Config;
 import com.blogspot.kunmii.beaconadmin.R;
-import com.blogspot.kunmii.beaconadmin.activities.FloorPlanListActivity;
-import com.blogspot.kunmii.beaconadmin.data.Beacon;
 import com.blogspot.kunmii.beaconadmin.data.FloorPlan;
 import com.blogspot.kunmii.beaconadmin.data.FloorplanWithBeacons;
-import com.blogspot.kunmii.beaconadmin.data.Project;
+import com.blogspot.kunmii.beaconadmin.fragments.FloorplanListFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,8 +20,8 @@ import java.util.List;
 public class FloorplanAdapter extends RecyclerView.Adapter<FloorplanAdapter.RecyclerViewHolder>{
 
     List<FloorplanWithBeacons> floorPlans;
-    FloorPlanListActivity.FloorplanClickListener clickListener;
-    public FloorplanAdapter(List<FloorplanWithBeacons> data, FloorPlanListActivity.FloorplanClickListener listener){
+    FloorplanListFragment.FloorplanClickListener clickListener;
+    public FloorplanAdapter(List<FloorplanWithBeacons> data, FloorplanListFragment.FloorplanClickListener listener){
         floorPlans = data;
         clickListener = listener;
     }

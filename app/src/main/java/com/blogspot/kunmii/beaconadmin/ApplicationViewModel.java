@@ -28,7 +28,7 @@ public class ApplicationViewModel extends AndroidViewModel{
     AppRepository repository;
     private LiveData<List<Project>> projects = null;
 
-    BeaconHelper beaconHelper = null;
+    static BeaconHelper beaconHelper = null;
 
 
     public ApplicationViewModel(Application application)
@@ -129,12 +129,26 @@ public class ApplicationViewModel extends AndroidViewModel{
 
         if(beaconHelper == null)
         {
-            beaconHelper = new BeaconHelper(getApplication());
+            beaconHelper = BeaconHelper.getInstance(getApplication());
+            beaconHelper.onStart();
         }
 
-        beaconHelper.onStart();
-
         return beaconHelper;
+    }
+
+    public void stopBeaconScan(){
+        if(beaconHelper != null)
+        {
+            beaconHelper.onStop();
+        }
+    }
+
+    public void destroyBeaconManager(){
+        if(beaconHelper!=null)
+        {
+            beaconHelper.onDestroy();
+            beaconHelper = null;
+        }
     }
 
 

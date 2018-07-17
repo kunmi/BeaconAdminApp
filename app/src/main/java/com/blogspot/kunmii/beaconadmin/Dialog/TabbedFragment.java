@@ -1,6 +1,7 @@
 package com.blogspot.kunmii.beaconadmin.Dialog;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +33,9 @@ public class TabbedFragment {
 
     static public class IBeaconFragment extends Fragment
     {
-
+        ApplicationViewModel viewModel = null;
         RecyclerView recyclerView;
         IBeaconAdapter adapter;
-        private ApplicationViewModel viewModel;
 
         IBeaconAdapter.IbeaconListClickListener listener;
 
@@ -53,7 +54,7 @@ public class TabbedFragment {
 
             View v = inflater.inflate(R.layout.fragment_beacons, container,false);
 
-            recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
+            recyclerView =  v.findViewById(R.id.recyclerview);
             adapter = new IBeaconAdapter(listener, new ArrayList<>());
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -68,6 +69,19 @@ public class TabbedFragment {
         public void onResume() {
             super.onResume();
 
+            if(viewModel == null) {
+                viewModel = ViewModelProviders.of(this).get(ApplicationViewModel.class);
+
+                viewModel.getIbeaconDevices().observe(this, new Observer<HashMap<String, IBeaconDevice>>() {
+                    @Override
+                    public void onChanged(@Nullable HashMap<String, IBeaconDevice> stringIBeaconWrapperHashMap) {
+                        Log.d("", "");
+
+                        adapter.addItems(new java.util.ArrayList<>(stringIBeaconWrapperHashMap.values()));
+                    }
+                });
+
+            }
 
         }
 
@@ -78,9 +92,9 @@ public class TabbedFragment {
 
     static public class EddyFragment extends Fragment
     {
+        ApplicationViewModel viewModel = null;
         RecyclerView recyclerView;
         EddyListAdapter adapter;
-        private ApplicationViewModel viewModel;
 
         EddyListAdapter.EddyListClickListener listener;
 
@@ -111,6 +125,21 @@ public class TabbedFragment {
         @Override
         public void onResume() {
             super.onResume();
+
+            if(viewModel == null) {
+                viewModel = ViewModelProviders.of(this).get(ApplicationViewModel.class);
+
+                viewModel.getEddystoneDevices().observe(this, new Observer<HashMap<String, IEddystoneDevice>>() {
+                    @Override
+                    public void onChanged(@Nullable HashMap<String, IEddystoneDevice> stringEddyWrapperHashMap) {
+
+                        setItems(new java.util.ArrayList<>(stringEddyWrapperHashMap.values()));
+
+                        //adapter.addItems(new java.util.ArrayList<>(stringEddyWrapperHashMap.values()));
+                    }
+                });
+
+            }
         }
 
         public void setItems(List<IEddystoneDevice> data) {

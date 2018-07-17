@@ -5,15 +5,22 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
+import com.kontakt.sdk.android.BuildConfig;
+import com.kontakt.sdk.android.ble.configuration.ScanMode;
+import com.kontakt.sdk.android.ble.configuration.ScanPeriod;
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
 import com.kontakt.sdk.android.ble.device.EddystoneDevice;
+import com.kontakt.sdk.android.ble.exception.ScanError;
 import com.kontakt.sdk.android.ble.manager.ProximityManager;
 import com.kontakt.sdk.android.ble.manager.ProximityManagerFactory;
 import com.kontakt.sdk.android.ble.manager.listeners.EddystoneListener;
 import com.kontakt.sdk.android.ble.manager.listeners.IBeaconListener;
+import com.kontakt.sdk.android.ble.manager.listeners.ScanStatusListener;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleEddystoneListener;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleIBeaconListener;
+import com.kontakt.sdk.android.ble.spec.EddystoneFrameType;
 import com.kontakt.sdk.android.common.KontaktSDK;
+import com.kontakt.sdk.android.common.log.LogLevel;
 import com.kontakt.sdk.android.common.profile.IBeaconDevice;
 import com.kontakt.sdk.android.common.profile.IBeaconRegion;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
@@ -28,10 +35,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class BeaconHelper {
+
+
+
+
 
     private ProximityManager proximityManager;
 
@@ -53,13 +66,65 @@ public class BeaconHelper {
     MutableLiveData<IEddystoneDevice> lostEddyBeacon = new MutableLiveData<>();
 
 
-    public BeaconHelper(Application context) {
+    static BeaconHelper currentInstance = null;
 
-        KontaktSDK.initialize(context);
+
+    public static BeaconHelper getInstance(Application context){
+
+        if(currentInstance == null)
+        {
+            currentInstance = new BeaconHelper(context);
+        }
+
+        return currentInstance;
+
+    }
+
+    private BeaconHelper(Application context) {
+
+        KontaktSDK.initialize("123").setDebugLoggingEnabled(true).setLogLevelEnabled(LogLevel.DEBUG, true);
 
         proximityManager = ProximityManagerFactory.create(context);
+
+
         proximityManager.setIBeaconListener(createIBeaconListener());
         proximityManager.setEddystoneListener(createEddystoneListener());
+
+
+        proximityManager.configuration()
+                .scanMode(ScanMode.BALANCED)
+                .scanPeriod(ScanPeriod.create(TimeUnit.SECONDS.toMillis(60), TimeUnit.SECONDS.toMillis(2)))
+                .monitoringEnabled(false)
+                .eddystoneFrameTypes(EnumSet.of(EddystoneFrameType.UID))
+                .deviceUpdateCallbackInterval(TimeUnit.SECONDS.toMillis(3));
+
+
+        proximityManager.setScanStatusListener(new ScanStatusListener() {
+            @Override
+            public void onScanStart() {
+                Log.d("Kunmi", "onStart" );
+            }
+
+            @Override
+            public void onScanStop() {
+                Log.d("Kunmi", "onStop" );
+            }
+
+            @Override
+            public void onScanError(ScanError scanError) {
+                Log.d("Kunmi", "onScanError" );
+            }
+
+            @Override
+            public void onMonitoringCycleStart() {
+                Log.d("Kunmi", "onMonitoringStart" );
+            }
+
+            @Override
+            public void onMonitoringCycleStop() {
+                Log.d("Kunmi", "onMonitoringStopped" );
+            }
+        });
     }
 
 
@@ -74,6 +139,8 @@ public class BeaconHelper {
     public void onDestroy(){
         proximityManager.disconnect();
         proximityManager = null;
+        currentInstance = null;
+
     }
 
     private void startScanning() {
@@ -102,7 +169,20 @@ public class BeaconHelper {
             @Override
             public void onIBeaconsUpdated(List<IBeaconDevice> ibeacons, IBeaconRegion region) {
                 Log.d("","");
+
                 updatedIbeacon.setValue(ibeacons);
+
+
+                HashMap<String, IBeaconDevice> devices = beaconDeviceLiveData.getValue();
+
+                for(IBeaconDevice device: ibeacons){
+                    if(devices.containsKey(device.getAddress()))
+                    {
+                        devices.put(device.getAddress(), device);
+                    }
+                }
+
+                beaconDeviceLiveData.setValue(devices);
             }
 
             @Override
@@ -139,6 +219,17 @@ public class BeaconHelper {
                 super.onEddystonesUpdated(eddystones, namespace);
 
                 updatedEddystone.setValue(eddystones);
+
+                HashMap<String, IEddystoneDevice> devices = eddystoneDeviceLiveData.getValue();
+
+                for(IEddystoneDevice device: eddystones){
+                    if(devices.containsKey(device.getAddress()))
+                    {
+                        devices.put(device.getAddress(), device);
+                    }
+                }
+
+                eddystoneDeviceLiveData.setValue(devices);
             }
 
             @Override

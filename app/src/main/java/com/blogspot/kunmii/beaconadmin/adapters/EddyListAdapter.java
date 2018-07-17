@@ -11,6 +11,7 @@ import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.kontakt.sdk.android.common.profile.IEddystoneNamespace;
+import com.kontakt.sdk.android.common.profile.RemoteBluetoothDevice;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +50,9 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
     public void onBindViewHolder(@NonNull EddyViewHolder holder, int position) {
 
         IEddystoneDevice beacon = beaconWrappers.get(position);
+
+        String name = beacon.getName();
+        String model = beacon.getModel().toString();
 
         if(beacon.getName()!=null) {
             holder.name.setText(beacon.getName());

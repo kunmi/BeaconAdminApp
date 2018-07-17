@@ -11,14 +11,15 @@ import android.widget.TextView;
 import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.activities.MainActivity;
 import com.blogspot.kunmii.beaconadmin.data.Project;
+import com.blogspot.kunmii.beaconadmin.fragments.ProjectListFragment;
 
 import java.util.List;
 
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.RecyclerViewHolder>{
 
     List<Project> projects;
-    MainActivity.ProjectClickListener clickListener;
-    public ProjectAdapter(List<Project> data, MainActivity.ProjectClickListener listener){
+    ProjectListFragment.ProjectClickListener clickListener;
+    public ProjectAdapter(List<Project> data, ProjectListFragment.ProjectClickListener listener){
         projects = data;
         clickListener = listener;
     }

@@ -166,32 +166,7 @@ public class ActivityBeaconList extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        if(viewModel == null) {
-            viewModel = ViewModelProviders.of(this).get(ApplicationViewModel.class);
-
-
-            viewModel.getIbeaconDevices().observe(this, new Observer<HashMap<String, IBeaconDevice>>() {
-                @Override
-                public void onChanged(@Nullable HashMap<String, IBeaconDevice> stringIBeaconWrapperHashMap) {
-                    Log.d("","");
-                    iBeaconFragment.setItems(new java.util.ArrayList<>(stringIBeaconWrapperHashMap.values()));
-
-                    //adapter.addItems(new java.util.ArrayList<>(stringIBeaconWrapperHashMap.values()));
-                }
-            });
-
-            viewModel.getEddystoneDevices().observe(this, new Observer<HashMap<String, IEddystoneDevice>>() {
-                @Override
-                public void onChanged(@Nullable HashMap<String, IEddystoneDevice> stringEddyWrapperHashMap) {
-
-                    eddyFragment.setItems(new java.util.ArrayList<>(stringEddyWrapperHashMap.values()));
-
-                    //adapter.addItems(new java.util.ArrayList<>(stringEddyWrapperHashMap.values()));
-                }
-            });
-
-
-        }
+        
 
 
     }
@@ -204,8 +179,6 @@ public class ActivityBeaconList extends AppCompatActivity{
             setResult(RC, i);
         }
         finish();
-
-
     }
 
     @Override
@@ -226,10 +199,7 @@ public class ActivityBeaconList extends AppCompatActivity{
             case R.id.addmanual:
                 showManualBeaconDialog();
                 break;
-
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
