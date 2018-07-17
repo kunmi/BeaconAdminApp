@@ -58,7 +58,10 @@ public class Helpers {
     public static void clearALlData(Application application)
     {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(application);
-        defaultSharedPreferences.edit().clear().apply();
+        SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+
+        editor.clear();
+        editor.apply();
     }
 
     public static boolean StoreUserData(JSONObject userData, Application context)

@@ -604,7 +604,6 @@ public class FloorplanActivity extends AppCompatActivity {
                            {
                                Toast.makeText(FloorplanActivity.this, "Sending Failed :(", Toast.LENGTH_SHORT).show();
                            }
-
                        });
 
 

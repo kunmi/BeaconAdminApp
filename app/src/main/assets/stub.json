@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "5b4bdfbee35fa500142e0d50",
+    "name": "Lidl - Volgelweh",
+    "email": "contact@lidl.de",
+    "description": "This is a sample project depicting Lidl",
+    "floorPlans": [
+      {
+        "_id": "5b4cea06d4c7a2001f0fdcb7",
+        "name": "Test Project",
+        "url": "floorplans/plan-5b4bdfbee35fa500142e0d50-1531767302673.jpg",
+        "beacons": [],
+        "created": "2018-07-16T18:55:02.812Z",
+        "updated": "2018-07-16T18:53:22.816Z"
+      }
+    ],
+    "created": "2018-07-15T23:55:40.609Z",
+    "updated": "2018-07-15T23:55:40.609Z"
+  },
+  {
+    "_id": "5b4d02acd4c7a2001f0fdcb9",
+    "name": "Thesis Presentation",
+    "email": "coolkunmii@gmail.com",
+    "description": "Test Thesis project to showcase system features",
+    "floorPlans": [
+      {
+        "_id": "5b4d02c1d4c7a2001f0fdcbb",
+        "name": "Room 56",
+        "url": "floorplans/plan-5b4d02acd4c7a2001f0fdcb9-1531773633443.png",
+        "beacons": [],
+        "created": "2018-07-16T20:40:33.451Z",
+        "updated": "2018-07-16T18:53:22.816Z"
+      }
+    ],
+    "created": "2018-07-16T18:53:23.321Z",
+    "updated": "2018-07-16T18:53:23.321Z"
+  }
+]

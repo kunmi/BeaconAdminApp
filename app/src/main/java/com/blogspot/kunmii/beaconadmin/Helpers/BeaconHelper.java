@@ -19,8 +19,6 @@ import com.kontakt.sdk.android.common.profile.IBeaconRegion;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.kontakt.sdk.android.common.profile.IEddystoneNamespace;
 
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,10 +33,7 @@ import java.util.List;
 
 public class BeaconHelper {
 
-    private BeaconManager beaconManager;
     private ProximityManager proximityManager;
-
-
 
     MutableLiveData<HashMap<String, IBeaconWrapper>> beaconDeviceLiveData = new MutableLiveData<>();
     MutableLiveData<HashMap<String, EddystoneWrapper>> eddystoneDeviceLiveData = new MutableLiveData<>();

@@ -12,7 +12,7 @@ public class Config {
     //public static final String SERVER = "http://192.168.0.100:3000/";
     //public static final String SERVER = "http://192.168.0.104:3000/";
 
-    public static final String SERVER = "http://10.0.2.2:3000/";
+    public static final String SERVER = "http://kunmi.eu-4.evennode.com/";
     public static final String SERVER_URL = SERVER+"api/";
 
     public static final String LOGIN_URL = "authenticate";
@@ -79,11 +79,6 @@ public class Config {
         String MESSAGE_TITLE = "title";
         String MESSAGE_BODY = "body";
         String MESSAGE_BEACONS = "beacons";
-
-
-
-
-
     }
 
 }

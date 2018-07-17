@@ -156,7 +156,7 @@ public class AppRepository {
 
                         JSONArray floorplanArray = jsonObject.getJSONArray(Config.NETWORK_JSON_NODE.PROJECT_FLOORPLANS);
                         for (int j = 0; j < floorplanArray.length(); j++) {
-                            JSONObject jsonFloorplan = floorplanArray.getJSONObject(i);
+                            JSONObject jsonFloorplan = floorplanArray.getJSONObject(j);
 
                             FloorPlan floorPlan = new FloorPlan();
                             floorPlan.setProjectObjectId(project.getObjectId());

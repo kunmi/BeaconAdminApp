@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.logout:
                 viewModel.LogOut();
+                viewModel=null;
                 startActivityForResult(new Intent(this, LoginActivity.class),1);
                 break;
         }
