@@ -29,6 +29,8 @@ import com.blogspot.kunmii.beaconadmin.R;
 import com.blogspot.kunmii.beaconadmin.adapters.CustomAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.EddyListAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.IBeaconAdapter;
+import com.kontakt.sdk.android.common.profile.IBeaconDevice;
+import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +73,7 @@ public class ActivityBeaconList extends AppCompatActivity{
 
         iBeaconFragment = TabbedFragment.IBeaconFragment.getInstance(new IBeaconAdapter.IbeaconListClickListener() {
             @Override
-            public void onClick(BeaconHelper.IBeaconWrapper beaconWrapper) {
+            public void onClick(IBeaconDevice beaconWrapper) {
 
                 Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Add Beacon",
                         new DialogInterface.OnClickListener() {
@@ -82,11 +84,11 @@ public class ActivityBeaconList extends AppCompatActivity{
                                 if(iBeacon!=null)
                                 {
                                     try {
-                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_UUID, beaconWrapper.device.getProximityUUID().toString());
-                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_MAJOR, beaconWrapper.device.getMajor());
-                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_MINOR, beaconWrapper.device.getMinor());
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_UUID, beaconWrapper.getProximityUUID().toString());
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_MAJOR, beaconWrapper.getMajor());
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.IBEACON_MINOR, beaconWrapper.getMinor());
 
-                                        iBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
+                                        iBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.getTxPower());
 
                                         submitResult(iBeacon.toString());
 
@@ -110,7 +112,7 @@ public class ActivityBeaconList extends AppCompatActivity{
 
         eddyFragment = TabbedFragment.EddyFragment.getInstance(new EddyListAdapter.EddyListClickListener() {
             @Override
-            public void onClick(BeaconHelper.EddystoneWrapper beaconWrapper) {
+            public void onClick(IEddystoneDevice beaconWrapper) {
                 Helpers.showDialog(ActivityBeaconList.this, "Add beacon", "Add beacon to Floorplan","Yes",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -120,15 +122,15 @@ public class ActivityBeaconList extends AppCompatActivity{
                                 if(eddyBeacon!=null)
                                 {
                                     try {
-                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID, beaconWrapper.device.getNamespace());
-                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID, beaconWrapper.device.getInstanceId());
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID, beaconWrapper.getNamespace());
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID, beaconWrapper.getInstanceId());
 
-                                        if(beaconWrapper.device.getTelemetry()!=null)
-                                            eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, beaconWrapper.device.getTelemetry().toString());
+                                        if(beaconWrapper.getTelemetry()!=null)
+                                            eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, beaconWrapper.getTelemetry().toString());
                                         else
                                             eddyBeacon.put(Config.NETWORK_JSON_NODE.EDDY_TELEMETRY, null);
 
-                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.device.getTxPower());
+                                        eddyBeacon.put(Config.NETWORK_JSON_NODE.BEACON_TXPOWER, beaconWrapper.getTxPower());
                                         submitResult(eddyBeacon.toString());
 
                                     }
@@ -168,9 +170,9 @@ public class ActivityBeaconList extends AppCompatActivity{
             viewModel = ViewModelProviders.of(this).get(ApplicationViewModel.class);
 
 
-            viewModel.getIbeaconDevices().observe(this, new Observer<HashMap<String, BeaconHelper.IBeaconWrapper>>() {
+            viewModel.getIbeaconDevices().observe(this, new Observer<HashMap<String, IBeaconDevice>>() {
                 @Override
-                public void onChanged(@Nullable HashMap<String, BeaconHelper.IBeaconWrapper> stringIBeaconWrapperHashMap) {
+                public void onChanged(@Nullable HashMap<String, IBeaconDevice> stringIBeaconWrapperHashMap) {
                     Log.d("","");
                     iBeaconFragment.setItems(new java.util.ArrayList<>(stringIBeaconWrapperHashMap.values()));
 
@@ -178,9 +180,9 @@ public class ActivityBeaconList extends AppCompatActivity{
                 }
             });
 
-            viewModel.getEddystoneDevices().observe(this, new Observer<HashMap<String, BeaconHelper.EddystoneWrapper>>() {
+            viewModel.getEddystoneDevices().observe(this, new Observer<HashMap<String, IEddystoneDevice>>() {
                 @Override
-                public void onChanged(@Nullable HashMap<String, BeaconHelper.EddystoneWrapper> stringEddyWrapperHashMap) {
+                public void onChanged(@Nullable HashMap<String, IEddystoneDevice> stringEddyWrapperHashMap) {
 
                     eddyFragment.setItems(new java.util.ArrayList<>(stringEddyWrapperHashMap.values()));
 

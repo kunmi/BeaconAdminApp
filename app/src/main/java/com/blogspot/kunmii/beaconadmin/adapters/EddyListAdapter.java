@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import com.blogspot.kunmii.beaconadmin.Helpers.BeaconHelper;
 import com.blogspot.kunmii.beaconadmin.R;
-import com.kontakt.sdk.android.ble.device.EddystoneDevice;
-import com.kontakt.sdk.android.common.profile.IBeaconDevice;
-import com.kontakt.sdk.android.common.profile.IBeaconRegion;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.kontakt.sdk.android.common.profile.IEddystoneNamespace;
 
@@ -20,14 +17,25 @@ import java.util.Comparator;
 import java.util.List;
 
 public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyViewHolder>{
-    List<BeaconHelper.EddystoneWrapper> beaconWrappers;
+    List<IEddystoneDevice> beaconWrappers;
     EddyListClickListener listClickListener = null;
 
 
-    public EddyListAdapter(EddyListClickListener listener, List<BeaconHelper.EddystoneWrapper> data)
+    public EddyListAdapter(EddyListClickListener listener, List<IEddystoneDevice> data)
     {
+        setHasStableIds(true);
         listClickListener = listener;
         beaconWrappers = data;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @NonNull
@@ -35,33 +43,33 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
     public EddyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new EddyListAdapter.EddyViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.eddystone_list_item, parent, false));
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull EddyViewHolder holder, int position) {
-        BeaconHelper.EddystoneWrapper beaconWrapper = beaconWrappers.get(position);
 
-        IEddystoneNamespace region = beaconWrapper.namespace;
-        IEddystoneDevice beacon = beaconWrapper.device;
+        IEddystoneDevice beacon = beaconWrappers.get(position);
 
-        holder.namespace.setText(region.getIdentifier());
+        if(beacon.getName()!=null) {
+            holder.name.setText(beacon.getName());
+        }
 
-        holder.eddyNameSpace.setText(beacon.getNamespace());
+        if(beacon.getNamespace()!=null)
+            holder.eddyNameSpace.setText(beacon.getNamespace());
+
+        if(beacon.getInstanceId()!=null)
         holder.instanceId.setText(beacon.getInstanceId());
+
         holder.proximity.setText(beacon.getProximity().toString());
         holder.telemetry.setText(beacon.getTelemetry()!=null?"YES": "NO");
         holder.v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listClickListener.onClick(beaconWrapper);
+                listClickListener.onClick(beacon);
             }
         });
 
         holder.address.setText(beacon.getAddress());
-
-
-
     }
 
     @Override
@@ -69,13 +77,13 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
         return beaconWrappers.size();
     }
 
-    public void addItems(List<BeaconHelper.EddystoneWrapper> data) {
+    public void addItems(List<IEddystoneDevice> data) {
         this.beaconWrappers = data;
 
-        Collections.sort(this.beaconWrappers, new Comparator<BeaconHelper.EddystoneWrapper>() {
+        Collections.sort(this.beaconWrappers, new Comparator<IEddystoneDevice>() {
             @Override
-            public int compare(BeaconHelper.EddystoneWrapper o1, BeaconHelper.EddystoneWrapper o2) {
-                return o1.device.getProximity().compareTo(o2.device.getProximity());
+            public int compare(IEddystoneDevice o1, IEddystoneDevice o2) {
+                return o1.getProximity().compareTo(o2.getProximity());
             }
         });
 
@@ -85,7 +93,7 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
 
     public class EddyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView namespace;
+        TextView name;
 
         TextView eddyNameSpace;
         TextView instanceId;
@@ -99,7 +107,9 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
             super(itemView);
 
             v = itemView;
-            namespace = itemView.findViewById(R.id.namespace_text_view);
+
+
+            name = itemView.findViewById(R.id.name_text_view);
 
             eddyNameSpace = itemView.findViewById(R.id.namespace_text_view_main);
             instanceId = itemView.findViewById(R.id.instanceid_text_view);
@@ -111,6 +121,6 @@ public class EddyListAdapter extends RecyclerView.Adapter<EddyListAdapter.EddyVi
 
 
    public interface EddyListClickListener{
-        void onClick(BeaconHelper.EddystoneWrapper item);
+        void onClick(IEddystoneDevice item);
    }
 }

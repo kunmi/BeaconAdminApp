@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "82414f623bbb3e9f3c5754f602d00e72",
+    "identityHash": "a60ff653768312f36375c55d5610071d",
     "entities": [
       {
         "tableName": "projects",
@@ -50,7 +50,7 @@
       },
       {
         "tableName": "beacon",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`objectid` TEXT NOT NULL, `floorplanid` TEXT, `projectid` TEXT, `type` TEXT, `x` REAL NOT NULL, `y` REAL NOT NULL, `ref` TEXT, `txpower` TEXT, `beacon` TEXT, `updated` TEXT, PRIMARY KEY(`objectid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`objectid` TEXT NOT NULL, `floorplanid` TEXT, `projectid` TEXT, `type` TEXT, `x` REAL NOT NULL, `y` REAL NOT NULL, `ref` TEXT, `lookup` TEXT, `txpower` TEXT, `beacon` TEXT, `updated` TEXT, PRIMARY KEY(`objectid`))",
         "fields": [
           {
             "fieldPath": "objectId",
@@ -91,6 +91,12 @@
           {
             "fieldPath": "ref",
             "columnName": "ref",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lookUp",
+            "columnName": "lookup",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -169,7 +175,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"82414f623bbb3e9f3c5754f602d00e72\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a60ff653768312f36375c55d5610071d\")"
     ]
   }
 }

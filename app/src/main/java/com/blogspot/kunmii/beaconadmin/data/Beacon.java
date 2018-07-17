@@ -39,6 +39,9 @@ public class Beacon {
     @ColumnInfo(name = "ref")
     String ref;
 
+    @ColumnInfo(name = "lookup")
+    String lookUp;
+
     @ColumnInfo(name = "txpower")
     String txpower;
 
@@ -137,12 +140,19 @@ public class Beacon {
 
 
 
-
     public boolean isIbeacon(){
         if(type.equals("iBeacon"))
             return true;
         else
             return false;
+    }
+
+    public String getLookUp() {
+        return lookUp;
+    }
+
+    public void setLookUp(String lookup){
+        this.lookUp = lookup;
     }
 
     @Ignore

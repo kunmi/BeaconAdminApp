@@ -24,13 +24,13 @@
             android:orientation="vertical">
 
             <TextView style="@style/beacon_header"
-                android:text="Range: "/>
+                android:text="Name: "/>
 
             <TextView
-                android:id="@+id/range_text_view"
+                android:id="@+id/name_text_view"
                 android:layout_marginTop="5dp"
                  style="@style/beacon_text_style"
-                android:text="1234567"
+                android:text=""
                 />
 
 

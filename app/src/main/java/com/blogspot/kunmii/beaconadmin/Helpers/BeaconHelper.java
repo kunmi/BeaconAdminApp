@@ -35,12 +35,14 @@ public class BeaconHelper {
 
     private ProximityManager proximityManager;
 
-    MutableLiveData<HashMap<String, IBeaconWrapper>> beaconDeviceLiveData = new MutableLiveData<>();
-    MutableLiveData<HashMap<String, EddystoneWrapper>> eddystoneDeviceLiveData = new MutableLiveData<>();
+    MutableLiveData<HashMap<String, IBeaconDevice>> beaconDeviceLiveData = new MutableLiveData<>();
+    MutableLiveData<HashMap<String, IEddystoneDevice>> eddystoneDeviceLiveData = new MutableLiveData<>();
 
 
-    HashMap<String, IBeaconWrapper> ibeacons = new HashMap<>();
-    HashMap<String, EddystoneWrapper> eddystones = new HashMap<>();
+    HashMap<String, IBeaconDevice> ibeacons = new HashMap<>();
+    HashMap<String, IEddystoneDevice> eddystones = new HashMap<>();
+
+
 
     //ForUpdating - LiveMap
     MutableLiveData<List<IBeaconDevice>> updatedIbeacon = new MutableLiveData<>();
@@ -91,8 +93,7 @@ public class BeaconHelper {
 
                 String key = ibeacon.getAddress();
 
-
-                ibeacons.put(key, new IBeaconWrapper(region,ibeacon));
+                ibeacons.put(key, ibeacon);
                 beaconDeviceLiveData.setValue(ibeacons);
 
 
@@ -107,7 +108,6 @@ public class BeaconHelper {
             @Override
             public void onIBeaconLost(IBeaconDevice ibeacon, IBeaconRegion region) {
                 super.onIBeaconLost(ibeacon, region);
-
 
                 String key = ibeacon.getAddress();
 
@@ -130,7 +130,7 @@ public class BeaconHelper {
 
                 String key = eddystone.getAddress();
 
-                eddystones.put(key, new EddystoneWrapper(namespace,eddystone));
+                eddystones.put(key, eddystone);
                 eddystoneDeviceLiveData.setValue(eddystones);
             }
 
@@ -159,11 +159,11 @@ public class BeaconHelper {
     }
 
 
-    public MutableLiveData<HashMap<String, IBeaconWrapper>> getIBeaconDeviceLiveData() {
+    public MutableLiveData<HashMap<String, IBeaconDevice>> getIBeaconDeviceLiveData() {
         return beaconDeviceLiveData;
     }
 
-    public MutableLiveData<HashMap<String, EddystoneWrapper>> getEddystoneDeviceLiveData() {
+    public MutableLiveData<HashMap<String, IEddystoneDevice>> getEddystoneDeviceLiveData() {
         return eddystoneDeviceLiveData;
     }
 
@@ -184,35 +184,6 @@ public class BeaconHelper {
     }
 
     public interface BeaconWrapper{}
-
-
-    public class IBeaconWrapper implements BeaconWrapper{
-
-        public IBeaconRegion region;
-        public IBeaconDevice device;
-
-        public IBeaconWrapper(IBeaconRegion reg, IBeaconDevice dev)
-        {
-            this.region = reg;
-            this.device = dev;
-        }
-
-    }
-
-    public class EddystoneWrapper implements BeaconWrapper{
-
-        public IEddystoneNamespace namespace;
-        public IEddystoneDevice device;
-
-
-        public EddystoneWrapper(IEddystoneNamespace namespace, IEddystoneDevice dev)
-        {
-            this.namespace = namespace;
-            this.device = dev;
-
-        }
-    }
-
 
 
 }

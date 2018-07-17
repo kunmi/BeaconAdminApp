@@ -12,21 +12,30 @@ import com.blogspot.kunmii.beaconadmin.R;
 import com.kontakt.sdk.android.common.profile.IBeaconDevice;
 import com.kontakt.sdk.android.common.profile.IBeaconRegion;
 
-import org.w3c.dom.Text;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class IBeaconAdapter extends RecyclerView.Adapter<IBeaconAdapter.IbeaconViewHolder>{
-    List<BeaconHelper.IBeaconWrapper> beaconWrappers;
+    List<IBeaconDevice> beaconWrappers;
     IbeaconListClickListener listClickListener = null;
 
 
-    public IBeaconAdapter(IbeaconListClickListener listener, List<BeaconHelper.IBeaconWrapper> data)
+    public IBeaconAdapter(IbeaconListClickListener listener, List<IBeaconDevice> data)
     {
         listClickListener = listener;
         beaconWrappers = data;
+        setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @NonNull
@@ -39,19 +48,22 @@ public class IBeaconAdapter extends RecyclerView.Adapter<IBeaconAdapter.IbeaconV
 
     @Override
     public void onBindViewHolder(@NonNull IbeaconViewHolder holder, int position) {
-        BeaconHelper.IBeaconWrapper beaconWrapper = beaconWrappers.get(position);
+        IBeaconDevice beacon = beaconWrappers.get(position);
 
-        IBeaconRegion region = beaconWrapper.region;
-        IBeaconDevice beacon = beaconWrapper.device;
-
-        holder.range.setText(region.getIdentifier());
+        if(beacon.getName()!=null) {
+            holder.name.setText(beacon.getName());
+        }
+        else
+        {
+            holder.name.setText("");
+        }
         holder.uuid.setText(String.valueOf(beacon.getProximityUUID().toString()));
         holder.major.setText(String.valueOf(beacon.getMajor()));
         holder.minor.setText(String.valueOf(beacon.getMinor()));
         holder.v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listClickListener.onClick(beaconWrapper);
+                listClickListener.onClick(beacon);
             }
         });
 
@@ -64,13 +76,13 @@ public class IBeaconAdapter extends RecyclerView.Adapter<IBeaconAdapter.IbeaconV
         return beaconWrappers.size();
     }
 
-    public void addItems(List<BeaconHelper.IBeaconWrapper> data) {
+    public void addItems(List<IBeaconDevice> data) {
         this.beaconWrappers = data;
 
-        Collections.sort(beaconWrappers, new Comparator<BeaconHelper.IBeaconWrapper>() {
+        Collections.sort(beaconWrappers, new Comparator<IBeaconDevice>() {
             @Override
-            public int compare(BeaconHelper.IBeaconWrapper o1, BeaconHelper.IBeaconWrapper o2) {
-                return o1.device.getProximity().compareTo(o2.device.getProximity());
+            public int compare(IBeaconDevice o1, IBeaconDevice o2) {
+                return o1.getProximity().compareTo(o2.getProximity());
             }
         });
 
@@ -80,7 +92,7 @@ public class IBeaconAdapter extends RecyclerView.Adapter<IBeaconAdapter.IbeaconV
 
     public class IbeaconViewHolder extends RecyclerView.ViewHolder{
 
-        TextView range;
+        TextView name;
         TextView uuid;
         TextView major;
         TextView minor;
@@ -95,7 +107,7 @@ public class IBeaconAdapter extends RecyclerView.Adapter<IBeaconAdapter.IbeaconV
             super(itemView);
 
             v = itemView;
-            range = itemView.findViewById(R.id.range_text_view);
+            name = itemView.findViewById(R.id.name_text_view);
             uuid = itemView.findViewById(R.id.uuid_text_view);
             major = itemView.findViewById(R.id.major_text_view);
             minor = itemView.findViewById(R.id.minor_text_view);
@@ -108,6 +120,6 @@ public class IBeaconAdapter extends RecyclerView.Adapter<IBeaconAdapter.IbeaconV
 
 
    public interface IbeaconListClickListener{
-        void onClick(BeaconHelper.IBeaconWrapper item);
+        void onClick(IBeaconDevice item);
    }
 }

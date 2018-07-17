@@ -66,14 +66,13 @@ public class ApplicationViewModel extends AndroidViewModel{
     }
 
 
-    public LiveData<HashMap<String, BeaconHelper.IBeaconWrapper>> getIbeaconDevices(){
+    public LiveData<HashMap<String, IBeaconDevice>> getIbeaconDevices(){
         return getBeaconHelper().getIBeaconDeviceLiveData();
     }
 
-    public LiveData<HashMap<String, BeaconHelper.EddystoneWrapper>> getEddystoneDevices(){
+    public LiveData<HashMap<String, IEddystoneDevice>> getEddystoneDevices(){
         return getBeaconHelper().getEddystoneDeviceLiveData();
     }
-
 
     public LiveData<IEddystoneDevice> getLostEddyBeacon() {
         if(beaconHelper==null)

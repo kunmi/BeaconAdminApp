@@ -20,6 +20,8 @@ import com.blogspot.kunmii.beaconadmin.adapters.EddyListAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.IBeaconAdapter;
 import com.blogspot.kunmii.beaconadmin.adapters.ProjectAdapter;
 import com.blogspot.kunmii.beaconadmin.data.Project;
+import com.kontakt.sdk.android.common.profile.IBeaconDevice;
+import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +71,7 @@ public class TabbedFragment {
 
         }
 
-        public void setItems(List<BeaconHelper.IBeaconWrapper> data) {
+        public void setItems(List<IBeaconDevice> data) {
             adapter.addItems(data);
         }
     }
@@ -111,7 +113,7 @@ public class TabbedFragment {
             super.onResume();
         }
 
-        public void setItems(List<BeaconHelper.EddystoneWrapper> data) {
+        public void setItems(List<IEddystoneDevice> data) {
             adapter.addItems(data);
         }
 

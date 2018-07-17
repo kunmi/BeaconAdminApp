@@ -80,7 +80,6 @@ public class FloorplanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_floorplan);
 
-
         layout = findViewById(R.id.appbar_layout);
         toolbar = findViewById(R.id.toolbar);
 
@@ -95,7 +94,6 @@ public class FloorplanActivity extends AppCompatActivity {
 
         floorplanId = getIntent().getStringExtra(FLOORPLAN_ID);
         projectId = getIntent().getStringExtra(PROJECT_ID);
-
 
         imageView = (FloorImageView) findViewById(R.id.floorplan_view);
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {

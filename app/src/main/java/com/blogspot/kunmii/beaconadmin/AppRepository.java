@@ -210,6 +210,21 @@ public class AppRepository {
                 beacon.setUpdated(beaconJson.getString(Config.NETWORK_JSON_NODE.CREATED));
             }
 
+            StringBuilder sb = new StringBuilder();
+
+            if(beacon.getType().equals("iBeacon")){
+                sb.append(beaconJson.getString(Config.NETWORK_JSON_NODE.IBEACON_UUID));
+                sb.append(beaconJson.getString(Config.NETWORK_JSON_NODE.IBEACON_MAJOR));
+                sb.append(beaconJson.getString(Config.NETWORK_JSON_NODE.IBEACON_MINOR));
+            }
+            else
+            {
+                sb.append(beaconJson.getString(Config.NETWORK_JSON_NODE.EDDY_NAMESPACEID));
+                sb.append(beaconJson.getString(Config.NETWORK_JSON_NODE.EDDY_INSTANCEID));
+            }
+
+            beacon.setLookUp(sb.toString());
+
 
             beacon.setBeaconData(beaconJson.toString());
 

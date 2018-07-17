@@ -23,13 +23,13 @@
             android:orientation="vertical">
 
             <TextView style="@style/beacon_header"
-                android:text="Namespace: "/>
+                android:text="Name: "/>
 
             <TextView
-                android:id="@+id/namespace_text_view"
+                android:id="@+id/name_text_view"
                 android:layout_marginTop="5dp"
                  style="@style/beacon_text_style"
-                android:text="1234567"
+                android:text=""
                 />
 
 
